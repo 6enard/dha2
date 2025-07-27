@@ -140,5 +140,6 @@ export const applicationService = {
     } catch (error) {
       console.error('Error fetching application:', error);
       throw error;
-  }
-};
+      }
+  };
+}
