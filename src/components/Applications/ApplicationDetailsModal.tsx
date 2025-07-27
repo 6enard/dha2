@@ -186,21 +186,32 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                           <div>
                             <p className="font-medium text-gray-900">Resume</p>
                             <p className="text-sm text-gray-600">{application.documents.resume.name}</p>
+                            {application.documents.resume.status === 'pending_upload' && (
+                              <p className="text-xs text-orange-600">File pending upload</p>
+                            )}
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <button
-                            onClick={() => handleDocumentDownload(application.documents!.resume!.url, application.documents!.resume!.name)}
-                            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDocumentDownload(application.documents!.resume!.url, application.documents!.resume!.name)}
-                            className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                          >
-                            <Download className="w-4 h-4" />
-                          </button>
+                          {application.documents.resume.url ? (
+                            <>
+                              <button
+                                onClick={() => handleDocumentDownload(application.documents!.resume!.url, application.documents!.resume!.name)}
+                                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDocumentDownload(application.documents!.resume!.url, application.documents!.resume!.name)}
+                                className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                              >
+                                <Download className="w-4 h-4" />
+                              </button>
+                            </>
+                          ) : (
+                            <span className="text-xs text-gray-500 px-2 py-1 bg-gray-100 rounded">
+                              File not uploaded
+                            </span>
+                          )}
                         </div>
                       </div>
                     )}
@@ -212,21 +223,32 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                           <div>
                             <p className="font-medium text-gray-900">Cover Letter</p>
                             <p className="text-sm text-gray-600">{application.documents.coverLetter.name}</p>
+                            {application.documents.coverLetter.status === 'pending_upload' && (
+                              <p className="text-xs text-orange-600">File pending upload</p>
+                            )}
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <button
-                            onClick={() => handleDocumentDownload(application.documents!.coverLetter!.url, application.documents!.coverLetter!.name)}
-                            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDocumentDownload(application.documents!.coverLetter!.url, application.documents!.coverLetter!.name)}
-                            className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                          >
-                            <Download className="w-4 h-4" />
-                          </button>
+                          {application.documents.coverLetter.url ? (
+                            <>
+                              <button
+                                onClick={() => handleDocumentDownload(application.documents!.coverLetter!.url, application.documents!.coverLetter!.name)}
+                                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDocumentDownload(application.documents!.coverLetter!.url, application.documents!.coverLetter!.name)}
+                                className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                              >
+                                <Download className="w-4 h-4" />
+                              </button>
+                            </>
+                          ) : (
+                            <span className="text-xs text-gray-500 px-2 py-1 bg-gray-100 rounded">
+                              File not uploaded
+                            </span>
+                          )}
                         </div>
                       </div>
                     )}
@@ -238,21 +260,32 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                           <div>
                             <p className="font-medium text-gray-900">Portfolio</p>
                             <p className="text-sm text-gray-600">{application.documents.portfolio.name}</p>
+                            {application.documents.portfolio.status === 'pending_upload' && (
+                              <p className="text-xs text-orange-600">File pending upload</p>
+                            )}
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <button
-                            onClick={() => handleDocumentDownload(application.documents!.portfolio!.url, application.documents!.portfolio!.name)}
-                            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDocumentDownload(application.documents!.portfolio!.url, application.documents!.portfolio!.name)}
-                            className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                          >
-                            <Download className="w-4 h-4" />
-                          </button>
+                          {application.documents.portfolio.url ? (
+                            <>
+                              <button
+                                onClick={() => handleDocumentDownload(application.documents!.portfolio!.url, application.documents!.portfolio!.name)}
+                                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDocumentDownload(application.documents!.portfolio!.url, application.documents!.portfolio!.name)}
+                                className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                              >
+                                <Download className="w-4 h-4" />
+                              </button>
+                            </>
+                          ) : (
+                            <span className="text-xs text-gray-500 px-2 py-1 bg-gray-100 rounded">
+                              File not uploaded
+                            </span>
+                          )}
                         </div>
                       </div>
                     )}

@@ -11,17 +11,26 @@ export interface Application {
   documents?: {
     resume?: {
       name: string;
-      url: string;
+      url?: string;
+      size?: number;
+      type?: string;
+      status?: 'pending_upload' | 'uploaded' | 'failed';
       uploadedAt: Date;
     };
     coverLetter?: {
       name: string;
-      url: string;
+      url?: string;
+      size?: number;
+      type?: string;
+      status?: 'pending_upload' | 'uploaded' | 'failed';
       uploadedAt: Date;
     };
     portfolio?: {
       name: string;
-      url: string;
+      url?: string;
+      size?: number;
+      type?: string;
+      status?: 'pending_upload' | 'uploaded' | 'failed';
       uploadedAt: Date;
     };
   };
