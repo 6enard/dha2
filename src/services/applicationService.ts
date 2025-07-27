@@ -8,7 +8,8 @@ import {
   query, 
   orderBy, 
   where,
-  Timestamp 
+  Timestamp,
+  serverTimestamp
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Application } from '../types';
@@ -21,7 +22,7 @@ export const applicationService = {
     try {
       const docRef = await addDoc(collection(db, COLLECTION_NAME), {
         ...applicationData,
-        appliedDate: Timestamp.now(),
+        appliedDate: serverTimestamp(),
         status: 'pending'
       });
       return docRef.id;

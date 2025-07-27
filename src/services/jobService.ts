@@ -7,7 +7,8 @@ import {
   deleteDoc, 
   query, 
   orderBy,
-  Timestamp 
+  Timestamp,
+  serverTimestamp
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Job } from '../types';
@@ -20,7 +21,7 @@ export const jobService = {
     try {
       const docRef = await addDoc(collection(db, COLLECTION_NAME), {
         ...jobData,
-        createdDate: Timestamp.now(),
+        createdDate: serverTimestamp(),
         status: 'active'
       });
       return docRef.id;
