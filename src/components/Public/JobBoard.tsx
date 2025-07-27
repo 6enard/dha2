@@ -37,8 +37,12 @@ const JobBoard: React.FC<JobBoardProps> = ({ onAuthRequired, onBack }) => {
   });
 
   const handleApplyClick = (job: Job) => {
-    if (!currentUser || currentUser.role !== 'applicant') {
+    if (!currentUser) {
       onAuthRequired();
+      return;
+    }
+    if (currentUser.role !== 'applicant') {
+      alert('Only applicants can apply for jobs. Please sign in with an applicant account.');
       return;
     }
     setSelectedJob(job);

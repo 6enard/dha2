@@ -16,10 +16,26 @@ const AppRoutes: React.FC = () => {
   const { currentUser } = useAuth();
   const [userRole, setUserRole] = useState<'hr' | 'applicant' | null>(null);
   const [showApplicantAuth, setShowApplicantAuth] = useState(false);
+  const [showJobBoard, setShowJobBoard] = useState(false);
 
   // If user is logged in and is an applicant, show applicant dashboard
-  if (currentUser && currentUser.role === 'applicant') {
-    return <ApplicantDashboard onBack={() => setUserRole(null)} />;
+  if (currentUser && currentUser.role === 'applicant' && !showJobBoard) {
+    return (
+      <ApplicantDashboard 
+        onBack={() => setUserRole(null)} 
+        onBrowseJobs={() => setShowJobBoard(true)}
+      />
+    );
+  }
+
+  // If applicant wants to browse jobs, show job board
+  if (currentUser && currentUser.role === 'applicant' && showJobBoard) {
+    return (
+      <JobBoard 
+        onAuthRequired={() => {}} // Already authenticated
+        onBack={() => setShowJobBoard(false)} 
+      />
+    );
   }
 
   // If applicant auth is requested, show applicant auth
