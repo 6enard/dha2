@@ -7,7 +7,7 @@ export interface Application {
   position: string;
   experience: string;
   education: string;
-  skills: string[];
+  skills?: string[];
   resumeUrl?: string;
   coverLetterUrl?: string;
   status: 'pending' | 'reviewed' | 'interviewed' | 'hired' | 'rejected';

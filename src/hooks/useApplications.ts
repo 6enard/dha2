@@ -1,0 +1,58 @@
+import { useState, useEffect } from 'react';
+import { applicationService } from '../services/applicationService';
+import { Application } from '../types';
+
+export const useApplications = () => {
+  const [applications, setApplications] = useState<Application[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchApplications = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await applicationService.getAllApplications();
+      setApplications(data);
+    } catch (err) {
+      setError('Failed to fetch applications');
+      console.error('Error fetching applications:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateApplicationStatus = async (applicationId: string, status: Application['status'], notes?: string) => {
+    try {
+      await applicationService.updateApplicationStatus(applicationId, status, notes);
+      // Refresh applications after update
+      await fetchApplications();
+    } catch (err) {
+      setError('Failed to update application status');
+      console.error('Error updating application status:', err);
+    }
+  };
+
+  const deleteApplication = async (applicationId: string) => {
+    try {
+      await applicationService.deleteApplication(applicationId);
+      // Refresh applications after deletion
+      await fetchApplications();
+    } catch (err) {
+      setError('Failed to delete application');
+      console.error('Error deleting application:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchApplications();
+  }, []);
+
+  return {
+    applications,
+    loading,
+    error,
+    refetch: fetchApplications,
+    updateApplicationStatus,
+    deleteApplication
+  };
+};

@@ -1,77 +1,35 @@
 import React, { useState } from 'react';
-import { Search, Filter, Download, Eye, MoreHorizontal, Clock, CheckCircle, XCircle, Calendar, FileText } from 'lucide-react';
+import { Search, Filter, Download, Eye, MoreHorizontal, Clock, CheckCircle, XCircle, Calendar, FileText, Trash2, Edit } from 'lucide-react';
+import { useApplications } from '../hooks/useApplications';
+import { Application } from '../types';
 
 const Applications: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
+  const [showStatusModal, setShowStatusModal] = useState(false);
+  
+  const { applications, loading, error, updateApplicationStatus, deleteApplication } = useApplications();
 
-  const applications = [
-    {
-      id: 1,
-      firstName: 'Sarah',
-      lastName: 'Johnson',
-      email: 'sarah.johnson@email.com',
-      phone: '+1 (555) 123-4567',
-      position: 'Frontend Developer',
-      experience: '3 years',
-      appliedDate: '2024-01-15',
-      status: 'pending',
-      skills: ['React', 'TypeScript', 'CSS', 'JavaScript'],
-      education: "Bachelor's in Computer Science"
-    },
-    {
-      id: 2,
-      firstName: 'Michael',
-      lastName: 'Chen',
-      email: 'michael.chen@email.com',
-      phone: '+1 (555) 234-5678',
-      position: 'UI/UX Designer',
-      experience: '5 years',
-      appliedDate: '2024-01-14',
-      status: 'reviewed',
-      skills: ['Figma', 'Sketch', 'Adobe XD', 'Prototyping'],
-      education: "Bachelor's in Design"
-    },
-    {
-      id: 3,
-      firstName: 'Emily',
-      lastName: 'Davis',
-      email: 'emily.davis@email.com',
-      phone: '+1 (555) 345-6789',
-      position: 'Backend Developer',
-      experience: '4 years',
-      appliedDate: '2024-01-13',
-      status: 'interviewed',
-      skills: ['Node.js', 'Python', 'PostgreSQL', 'AWS'],
-      education: "Master's in Software Engineering"
-    },
-    {
-      id: 4,
-      firstName: 'David',
-      lastName: 'Wilson',
-      email: 'david.wilson@email.com',
-      phone: '+1 (555) 456-7890',
-      position: 'Product Manager',
-      experience: '6 years',
-      appliedDate: '2024-01-12',
-      status: 'hired',
-      skills: ['Product Strategy', 'Agile', 'Analytics', 'Leadership'],
-      education: "MBA in Business Administration"
-    },
-    {
-      id: 5,
-      firstName: 'Lisa',
-      lastName: 'Anderson',
-      email: 'lisa.anderson@email.com',
-      phone: '+1 (555) 567-8901',
-      position: 'Data Scientist',
-      experience: '2 years',
-      appliedDate: '2024-01-11',
-      status: 'rejected',
-      skills: ['Python', 'Machine Learning', 'SQL', 'Tableau'],
-      education: "PhD in Data Science"
+  const handleStatusChange = async (applicationId: string, newStatus: Application['status']) => {
+    await updateApplicationStatus(applicationId, newStatus);
+    setShowStatusModal(false);
+    setSelectedApplication(null);
+  };
+
+  const handleDeleteApplication = async (applicationId: string) => {
+    if (window.confirm('Are you sure you want to delete this application?')) {
+      await deleteApplication(applicationId);
     }
-  ];
+  };
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
 
   const filters = [
     { id: 'all', label: 'All Applications', count: applications.length },
@@ -126,6 +84,22 @@ const Applications: React.FC = () => {
       app.email.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesFilter && matchesSearch;
   });
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -210,12 +184,12 @@ const Applications: React.FC = () => {
                   <td className="py-4 px-6">
                     <p className="font-medium text-gray-900">{application.position}</p>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {application.skills.slice(0, 2).map((skill, index) => (
+                      {application.skills?.slice(0, 2).map((skill, index) => (
                         <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
                           {skill}
                         </span>
                       ))}
-                      {application.skills.length > 2 && (
+                      {application.skills && application.skills.length > 2 && (
                         <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
                           +{application.skills.length - 2}
                         </span>
@@ -223,7 +197,7 @@ const Applications: React.FC = () => {
                     </div>
                   </td>
                   <td className="py-4 px-6 text-gray-900">{application.experience}</td>
-                  <td className="py-4 px-6 text-gray-900">{application.appliedDate}</td>
+                  <td className="py-4 px-6 text-gray-900">{formatDate(application.appliedDate)}</td>
                   <td className="py-4 px-6">
                     <span className={getStatusBadge(application.status)}>
                       {getStatusIcon(application.status)}
@@ -235,8 +209,20 @@ const Applications: React.FC = () => {
                       <button className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                         <Eye className="w-4 h-4" />
                       </button>
-                      <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
-                        <MoreHorizontal className="w-4 h-4" />
+                      <button 
+                        onClick={() => {
+                          setSelectedApplication(application);
+                          setShowStatusModal(true);
+                        }}
+                        className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => handleDeleteApplication(application.id)}
+                        className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </td>
@@ -246,6 +232,49 @@ const Applications: React.FC = () => {
           </table>
         </div>
       </div>
+
+      {/* Status Update Modal */}
+      {showStatusModal && selectedApplication && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Update Application Status
+            </h3>
+            <p className="text-gray-600 mb-4">
+              {selectedApplication.firstName} {selectedApplication.lastName} - {selectedApplication.position}
+            </p>
+            <div className="space-y-2">
+              {['pending', 'reviewed', 'interviewed', 'hired', 'rejected'].map((status) => (
+                <button
+                  key={status}
+                  onClick={() => handleStatusChange(selectedApplication.id, status as Application['status'])}
+                  className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                    selectedApplication.status === status
+                      ? 'bg-blue-100 text-blue-800'
+                      : 'hover:bg-gray-100'
+                  }`}
+                >
+                  <div className="flex items-center space-x-2">
+                    {getStatusIcon(status)}
+                    <span className="capitalize">{status}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+            <div className="flex justify-end space-x-2 mt-6">
+              <button
+                onClick={() => {
+                  setShowStatusModal(false);
+                  setSelectedApplication(null);
+                }}
+                className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

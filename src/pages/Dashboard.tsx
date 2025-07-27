@@ -1,11 +1,34 @@
 import React from 'react';
 import { Users, FileText, Calendar, TrendingUp, Clock, CheckCircle, XCircle, UserCheck } from 'lucide-react';
+import { useApplications } from '../hooks/useApplications';
 
 const Dashboard: React.FC = () => {
+  const { applications, loading } = useApplications();
+
+  const getStats = () => {
+    if (loading || !applications.length) {
+      return {
+        total: 0,
+        pending: 0,
+        interviewed: 0,
+        hired: 0
+      };
+    }
+
+    return {
+      total: applications.length,
+      pending: applications.filter(app => app.status === 'pending' || app.status === 'reviewed').length,
+      interviewed: applications.filter(app => app.status === 'interviewed').length,
+      hired: applications.filter(app => app.status === 'hired').length
+    };
+  };
+
+  const statsData = getStats();
+
   const stats = [
     {
       name: 'Total Applications',
-      value: '247',
+      value: statsData.total.toString(),
       change: '+12%',
       changeType: 'increase',
       icon: FileText,
@@ -13,7 +36,7 @@ const Dashboard: React.FC = () => {
     },
     {
       name: 'Active Candidates',
-      value: '89',
+      value: statsData.pending.toString(),
       change: '+8%',
       changeType: 'increase',
       icon: Users,
@@ -21,7 +44,7 @@ const Dashboard: React.FC = () => {
     },
     {
       name: 'Interviews Scheduled',
-      value: '23',
+      value: statsData.interviewed.toString(),
       change: '+5%',
       changeType: 'increase',
       icon: Calendar,
@@ -29,7 +52,7 @@ const Dashboard: React.FC = () => {
     },
     {
       name: 'Hires This Month',
-      value: '12',
+      value: statsData.hired.toString(),
       change: '+15%',
       changeType: 'increase',
       icon: UserCheck,
@@ -37,40 +60,15 @@ const Dashboard: React.FC = () => {
     }
   ];
 
-  const recentApplications = [
-    {
-      id: 1,
-      name: 'Sarah Johnson',
-      position: 'Frontend Developer',
-      appliedDate: '2024-01-15',
-      status: 'pending',
-      experience: '3 years'
-    },
-    {
-      id: 2,
-      name: 'Michael Chen',
-      position: 'UI/UX Designer',
-      appliedDate: '2024-01-14',
-      status: 'reviewed',
-      experience: '5 years'
-    },
-    {
-      id: 3,
-      name: 'Emily Davis',
-      position: 'Backend Developer',
-      appliedDate: '2024-01-13',
-      status: 'interviewed',
-      experience: '4 years'
-    },
-    {
-      id: 4,
-      name: 'David Wilson',
-      position: 'Product Manager',
-      appliedDate: '2024-01-12',
-      status: 'hired',
-      experience: '6 years'
-    }
-  ];
+  const recentApplications = applications.slice(0, 4);
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -145,23 +143,32 @@ const Dashboard: React.FC = () => {
         </div>
         <div className="p-6">
           <div className="space-y-4">
-            {recentApplications.map((application) => (
+            {loading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+              </div>
+            ) : recentApplications.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                No applications yet
+              </div>
+            ) : (
+              recentApplications.map((application) => (
               <div key={application.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                 <div className="flex items-center space-x-4">
                   <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
                     <span className="text-white font-medium">
-                      {application.name.split(' ').map(n => n[0]).join('')}
+                      {application.firstName[0]}{application.lastName[0]}
                     </span>
                   </div>
                   <div>
-                    <h3 className="font-medium text-gray-900">{application.name}</h3>
+                    <h3 className="font-medium text-gray-900">{application.firstName} {application.lastName}</h3>
                     <p className="text-sm text-gray-600">{application.position} • {application.experience}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="text-right">
                     <p className="text-sm text-gray-600">Applied on</p>
-                    <p className="text-sm font-medium text-gray-900">{application.appliedDate}</p>
+                    <p className="text-sm font-medium text-gray-900">{formatDate(application.appliedDate)}</p>
                   </div>
                   <div className="flex items-center space-x-2">
                     {getStatusIcon(application.status)}
@@ -171,7 +178,8 @@ const Dashboard: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>
