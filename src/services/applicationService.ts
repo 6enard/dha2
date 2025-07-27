@@ -10,6 +10,7 @@ import {
   where,
   Timestamp,
   serverTimestamp
+  getDoc
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Application } from '../types';
@@ -140,6 +141,6 @@ export const applicationService = {
     } catch (error) {
       console.error('Error fetching application:', error);
       throw error;
-      }
-  };
+    }
+  }
 }
