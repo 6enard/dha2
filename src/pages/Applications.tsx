@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Filter, Download, Eye, MoreHorizontal, Clock, CheckCircle, XCircle, Calendar, FileText, Trash2, Edit, Plus } from 'lucide-react';
+import { Search, Filter, Download, Eye, MoreHorizontal, Clock, CheckCircle, XCircle, Calendar, FileText, Trash2, Edit, Plus, User } from 'lucide-react';
 import { useApplications } from '../hooks/useApplications';
 import ApplicationForm from '../components/Applications/ApplicationForm';
 import { Application } from '../types';
@@ -38,6 +38,11 @@ const Applications: React.FC = () => {
     }
   };
 
+  const handleViewApplication = (application: Application) => {
+    // For now, we'll show an alert with application details
+    // In a real app, this would open a detailed view modal
+    alert(`Application Details:\n\nName: ${application.firstName} ${application.lastName}\nEmail: ${application.email}\nPhone: ${application.phone}\nPosition: ${application.position}\nExperience: ${application.experience}\nEducation: ${application.education}\nSkills: ${application.skills?.join(', ') || 'None listed'}\nStatus: ${application.status}\nApplied: ${formatDate(application.appliedDate)}`);
+  };
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -230,7 +235,10 @@ const Applications: React.FC = () => {
                   </td>
                   <td className="py-4 px-6">
                     <div className="flex items-center space-x-2">
-                      <button className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                      <button 
+                        onClick={() => handleViewApplication(application)}
+                        className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      >
                         <Eye className="w-4 h-4" />
                       </button>
                       <button 
