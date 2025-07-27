@@ -5,6 +5,8 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Layout from './components/Layout/Layout';
 import Login from './components/Auth/Login';
 import RoleSelector from './components/Auth/RoleSelector';
+import ApplicantAuth from './components/Auth/ApplicantAuth';
+import ApplicantDashboard from './components/Applicant/ApplicantDashboard';
 import JobBoard from './components/Public/JobBoard';
 import Dashboard from './pages/Dashboard';
 import Applications from './pages/Applications';
@@ -13,6 +15,17 @@ import Jobs from './pages/Jobs';
 const AppRoutes: React.FC = () => {
   const { currentUser } = useAuth();
   const [userRole, setUserRole] = useState<'hr' | 'applicant' | null>(null);
+  const [showApplicantAuth, setShowApplicantAuth] = useState(false);
+
+  // If user is logged in and is an applicant, show applicant dashboard
+  if (currentUser && currentUser.role === 'applicant') {
+    return <ApplicantDashboard onBack={() => setUserRole(null)} />;
+  }
+
+  // If applicant auth is requested, show applicant auth
+  if (showApplicantAuth) {
+    return <ApplicantAuth onBack={() => setShowApplicantAuth(false)} />;
+  }
 
   // If no user is logged in and no role is selected, show role selector
   if (!currentUser && !userRole) {
@@ -21,7 +34,7 @@ const AppRoutes: React.FC = () => {
 
   // If applicant role is selected, show job board
   if (userRole === 'applicant') {
-    return <JobBoard />;
+    return <JobBoard onAuthRequired={() => setShowApplicantAuth(true)} onBack={() => setUserRole(null)} />;
   }
 
   // If HR role is selected but not logged in, show login

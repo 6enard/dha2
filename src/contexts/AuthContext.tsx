@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User as FirebaseUser, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { User as FirebaseUser, onAuthStateChanged, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { userService } from '../services/userService';
 import { User } from '../types';
@@ -7,6 +7,7 @@ import { User } from '../types';
 interface AuthContextType {
   currentUser: User | null;
   login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, userData: { firstName: string; lastName: string; phone?: string; role: 'applicant' | 'hr' }) => Promise<void>;
   logout: () => Promise<void>;
   loading: boolean;
 }
@@ -29,6 +30,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await signInWithEmailAndPassword(auth, email, password);
   };
 
+  const register = async (email: string, password: string, userData: { firstName: string; lastName: string; phone?: string; role: 'applicant' | 'hr' }) => {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const firebaseUser = userCredential.user;
+    
+    // Update the display name
+    await updateProfile(firebaseUser, {
+      displayName: `${userData.firstName} ${userData.lastName}`
+    });
+
+    // Create user profile in Firestore
+    const userProfile: User = {
+      uid: firebaseUser.uid,
+      email: firebaseUser.email || '',
+      displayName: `${userData.firstName} ${userData.lastName}`,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      phone: userData.phone,
+      role: userData.role,
+      createdAt: new Date()
+    };
+
+    await userService.createOrUpdateUserProfile(userProfile);
+  };
+
   const logout = async () => {
     await signOut(auth);
   };
@@ -47,7 +72,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               uid: firebaseUser.uid,
               email: firebaseUser.email || '',
               displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || '',
-              role
+              role,
+              createdAt: new Date()
             };
             
             await userService.createOrUpdateUserProfile(userProfile);
@@ -62,7 +88,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             uid: firebaseUser.uid,
             email: firebaseUser.email || '',
             displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || '',
-            role
+            role,
+            createdAt: new Date()
           });
         }
       } else {
@@ -77,6 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const value = {
     currentUser,
     login,
+    register,
     logout,
     loading
   };

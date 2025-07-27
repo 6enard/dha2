@@ -30,7 +30,11 @@ export const userService = {
       await setDoc(doc(db, COLLECTION_NAME, user.uid), {
         email: user.email,
         displayName: user.displayName,
-        role: user.role
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phone: user.phone,
+        role: user.role,
+        createdAt: user.createdAt || new Date()
       });
     } catch (error) {
       console.error('Error creating/updating user profile:', error);

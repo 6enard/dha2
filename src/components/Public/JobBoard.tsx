@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import { MapPin, Clock, DollarSign, Building, Search, Filter } from 'lucide-react';
 import { useJobs } from '../../hooks/useJobs';
+import { useAuth } from '../../contexts/AuthContext';
 import ApplicationForm from './PublicApplicationForm';
 import { Job } from '../../types';
 
-const JobBoard: React.FC = () => {
+interface JobBoardProps {
+  onAuthRequired: () => void;
+  onBack: () => void;
+}
+
+const JobBoard: React.FC<JobBoardProps> = ({ onAuthRequired, onBack }) => {
+  const { currentUser } = useAuth();
   const { jobs, loading, error } = useJobs();
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
@@ -30,6 +37,10 @@ const JobBoard: React.FC = () => {
   });
 
   const handleApplyClick = (job: Job) => {
+    if (!currentUser) {
+      onAuthRequired();
+      return;
+    }
     setSelectedJob(job);
     setShowApplicationForm(true);
   };

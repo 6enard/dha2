@@ -21,9 +21,9 @@ export const useApplications = () => {
     }
   };
 
-  const updateApplicationStatus = async (applicationId: string, status: Application['status'], notes?: string) => {
+  const updateApplicationStatus = async (applicationId: string, status: Application['status'], notes?: string, changedBy?: string) => {
     try {
-      await applicationService.updateApplicationStatus(applicationId, status, notes);
+      await applicationService.updateApplicationStatus(applicationId, status, notes, changedBy);
       // Refresh applications after update
       await fetchApplications();
     } catch (err) {

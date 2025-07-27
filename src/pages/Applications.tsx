@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { Search, Filter, Download, Eye, MoreHorizontal, Clock, CheckCircle, XCircle, Calendar, FileText, Trash2, Edit, Plus, User } from 'lucide-react';
+import { Search, Filter, Download, Clock, CheckCircle, XCircle, Calendar, FileText, Trash2, Edit, Plus } from 'lucide-react';
 import { useApplications } from '../hooks/useApplications';
+import { useAuth } from '../contexts/AuthContext';
 import ApplicationForm from '../components/Applications/ApplicationForm';
+import ApplicationDetailsModal from '../components/Applications/ApplicationDetailsModal';
 import { Application } from '../types';
 
 const Applications: React.FC = () => {
+  const { currentUser } = useAuth();
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
-  const [showStatusModal, setShowStatusModal] = useState(false);
+  const [viewingApplication, setViewingApplication] = useState<Application | null>(null);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
   const [editingApplication, setEditingApplication] = useState<Application | null>(null);
   
@@ -26,10 +28,9 @@ const Applications: React.FC = () => {
     }
   };
 
-  const handleStatusChange = async (applicationId: string, newStatus: Application['status']) => {
-    await updateApplicationStatus(applicationId, newStatus);
-    setShowStatusModal(false);
-    setSelectedApplication(null);
+  const handleStatusUpdate = async (applicationId: string, newStatus: Application['status'], notes?: string) => {
+    await updateApplicationStatus(applicationId, newStatus, notes, currentUser?.displayName || currentUser?.email || 'HR');
+    setViewingApplication(null);
   };
 
   const handleDeleteApplication = async (applicationId: string) => {
@@ -38,11 +39,6 @@ const Applications: React.FC = () => {
     }
   };
 
-  const handleViewApplication = (application: Application) => {
-    // For now, we'll show an alert with application details
-    // In a real app, this would open a detailed view modal
-    alert(`Application Details:\n\nName: ${application.firstName} ${application.lastName}\nEmail: ${application.email}\nPhone: ${application.phone}\nPosition: ${application.position}\nExperience: ${application.experience}\nEducation: ${application.education}\nSkills: ${application.skills?.join(', ') || 'None listed'}\nStatus: ${application.status}\nApplied: ${formatDate(application.appliedDate)}`);
-  };
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -236,10 +232,10 @@ const Applications: React.FC = () => {
                   <td className="py-4 px-6">
                     <div className="flex items-center space-x-2">
                       <button 
-                        onClick={() => handleViewApplication(application)}
+                        onClick={() => setViewingApplication(application)}
                         className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                       >
-                        <Eye className="w-4 h-4" />
+                        <FileText className="w-4 h-4" />
                       </button>
                       <button 
                         onClick={() => {
@@ -264,47 +260,13 @@ const Applications: React.FC = () => {
         </div>
       </div>
 
-      {/* Status Update Modal */}
-      {showStatusModal && selectedApplication && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Update Application Status
-            </h3>
-            <p className="text-gray-600 mb-4">
-              {selectedApplication.firstName} {selectedApplication.lastName} - {selectedApplication.position}
-            </p>
-            <div className="space-y-2">
-              {['pending', 'reviewed', 'interviewed', 'hired', 'rejected'].map((status) => (
-                <button
-                  key={status}
-                  onClick={() => handleStatusChange(selectedApplication.id, status as Application['status'])}
-                  className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
-                    selectedApplication.status === status
-                      ? 'bg-blue-100 text-blue-800'
-                      : 'hover:bg-gray-100'
-                  }`}
-                >
-                  <div className="flex items-center space-x-2">
-                    {getStatusIcon(status)}
-                    <span className="capitalize">{status}</span>
-                  </div>
-                </button>
-              ))}
-            </div>
-            <div className="flex justify-end space-x-2 mt-6">
-              <button
-                onClick={() => {
-                  setShowStatusModal(false);
-                  setSelectedApplication(null);
-                }}
-                className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
+      {/* Application Details Modal */}
+      {viewingApplication && (
+        <ApplicationDetailsModal
+          application={viewingApplication}
+          onClose={() => setViewingApplication(null)}
+          onStatusUpdate={handleStatusUpdate}
+        />
       )}
 
       {/* Application Form Modal */}

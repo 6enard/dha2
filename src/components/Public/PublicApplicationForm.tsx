@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { X, Upload, FileText, CheckCircle } from 'lucide-react';
+import { X, CheckCircle } from 'lucide-react';
 import { Job } from '../../types';
+import { useAuth } from '../../contexts/AuthContext';
 import { applicationService } from '../../services/applicationService';
+import DocumentUpload from './DocumentUpload';
+import { storageService } from '../../services/storageService';
 
 interface PublicApplicationFormProps {
   job: Job;
@@ -9,6 +12,7 @@ interface PublicApplicationFormProps {
 }
 
 const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onClose }) => {
+  const { currentUser } = useAuth();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -20,10 +24,16 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
     salary: '',
     coverLetter: ''
   });
+  const [uploadedFiles, setUploadedFiles] = useState<{
+    resume?: File;
+    coverLetter?: File;
+    portfolio?: File;
+  }>({});
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,14 +41,59 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
     setError('');
 
     try {
+      // Check if resume is uploaded (required)
+      if (!uploadedFiles.resume) {
+        setError('Please upload your resume to continue.');
+        return;
+      }
+
+      setUploadProgress(10);
+
+      // Upload documents
+      const documents: any = {};
+      
+      if (uploadedFiles.resume) {
+        const resumeUrl = await storageService.uploadDocument(uploadedFiles.resume, 'resume', currentUser!.uid);
+        documents.resume = {
+          name: uploadedFiles.resume.name,
+          url: resumeUrl,
+          uploadedAt: new Date()
+        };
+        setUploadProgress(40);
+      }
+
+      if (uploadedFiles.coverLetter) {
+        const coverLetterUrl = await storageService.uploadDocument(uploadedFiles.coverLetter, 'coverLetter', currentUser!.uid);
+        documents.coverLetter = {
+          name: uploadedFiles.coverLetter.name,
+          url: coverLetterUrl,
+          uploadedAt: new Date()
+        };
+        setUploadProgress(60);
+      }
+
+      if (uploadedFiles.portfolio) {
+        const portfolioUrl = await storageService.uploadDocument(uploadedFiles.portfolio, 'portfolio', currentUser!.uid);
+        documents.portfolio = {
+          name: uploadedFiles.portfolio.name,
+          url: portfolioUrl,
+          uploadedAt: new Date()
+        };
+        setUploadProgress(80);
+      }
+
       const applicationData = {
         ...formData,
         position: job.title,
         skills: formData.skills.split(',').map(skill => skill.trim()).filter(Boolean),
-        status: 'pending' as const
+        status: 'pending' as const,
+        applicantId: currentUser!.uid,
+        documents
       };
 
+      setUploadProgress(90);
       await applicationService.createApplication(applicationData);
+      setUploadProgress(100);
       setIsSubmitted(true);
     } catch (err) {
       setError('Failed to submit application. Please try again.');
@@ -53,6 +108,21 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
       ...prev,
       [e.target.name]: e.target.value
     }));
+  };
+
+  const handleFileSelect = (file: File, type: 'resume' | 'coverLetter' | 'portfolio') => {
+    setUploadedFiles(prev => ({
+      ...prev,
+      [type]: file
+    }));
+  };
+
+  const handleFileRemove = (type: 'resume' | 'coverLetter' | 'portfolio') => {
+    setUploadedFiles(prev => {
+      const updated = { ...prev };
+      delete updated[type];
+      return updated;
+    });
   };
 
   if (isSubmitted) {
@@ -97,6 +167,23 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
               {error}
+            </div>
+          )}
+
+          {isSubmitting && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-center space-x-3">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-blue-900">Submitting your application...</p>
+                  <div className="w-full bg-blue-200 rounded-full h-2 mt-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                      style={{ width: `${uploadProgress}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -231,6 +318,16 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
               rows={4}
               placeholder="Tell us why you're interested in this position and what makes you a great fit..."
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+            />
+          </div>
+
+          {/* Document Upload Section */}
+          <div>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Documents</h3>
+            <DocumentUpload
+              onFileSelect={handleFileSelect}
+              uploadedFiles={uploadedFiles}
+              onFileRemove={handleFileRemove}
             />
           </div>
 

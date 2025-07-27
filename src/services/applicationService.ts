@@ -71,13 +71,28 @@ export const applicationService = {
   },
 
   // Update application status
-  async updateApplicationStatus(applicationId: string, status: Application['status'], notes?: string): Promise<void> {
+  async updateApplicationStatus(applicationId: string, status: Application['status'], notes?: string, changedBy?: string): Promise<void> {
     try {
       const applicationRef = doc(db, COLLECTION_NAME, applicationId);
       const updateData: any = { status };
       
       if (notes) {
         updateData.notes = notes;
+      }
+
+      // Add to status history
+      if (changedBy) {
+        const statusHistoryEntry = {
+          status,
+          changedAt: new Date(),
+          changedBy,
+          notes: notes || ''
+        };
+        
+        // Get current application to append to history
+        const currentApp = await this.getApplicationById(applicationId);
+        const currentHistory = currentApp?.statusHistory || [];
+        updateData.statusHistory = [...currentHistory, statusHistoryEntry];
       }
       
       await updateDoc(applicationRef, updateData);
@@ -106,5 +121,24 @@ export const applicationService = {
       console.error('Error deleting application:', error);
       throw error;
     }
+  },
+
+  // Get single application by ID
+  async getApplicationById(applicationId: string): Promise<Application | null> {
+    try {
+      const applicationDoc = await getDoc(doc(db, COLLECTION_NAME, applicationId));
+      
+      if (applicationDoc.exists()) {
+        return {
+          id: applicationDoc.id,
+          ...applicationDoc.data(),
+          appliedDate: applicationDoc.data().appliedDate?.toDate() || new Date()
+        } as Application;
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Error fetching application:', error);
+      throw error;
   }
 };

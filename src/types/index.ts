@@ -8,13 +8,36 @@ export interface Application {
   experience: string;
   education: string;
   skills?: string[];
-  resumeUrl?: string;
-  coverLetterUrl?: string;
+  documents?: {
+    resume?: {
+      name: string;
+      url: string;
+      uploadedAt: Date;
+    };
+    coverLetter?: {
+      name: string;
+      url: string;
+      uploadedAt: Date;
+    };
+    portfolio?: {
+      name: string;
+      url: string;
+      uploadedAt: Date;
+    };
+  };
   status: 'pending' | 'reviewed' | 'interviewed' | 'hired' | 'rejected';
   appliedDate: Date;
   notes?: string;
   interviewDate?: Date;
   salary?: string;
+  applicantId?: string;
+  coverLetter?: string;
+  statusHistory?: {
+    status: Application['status'];
+    changedAt: Date;
+    changedBy: string;
+    notes?: string;
+  }[];
 }
 
 export interface Job {
@@ -29,11 +52,17 @@ export interface Job {
   salaryRange?: string;
   status: 'active' | 'paused' | 'closed';
   createdDate: Date;
+  applicationCount?: number;
 }
 
 export interface User {
   uid: string;
   email: string;
   displayName?: string;
-  role: 'hr' | 'admin';
+  role: 'hr' | 'admin' | 'applicant';
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  profilePicture?: string;
+  createdAt?: Date;
 }
