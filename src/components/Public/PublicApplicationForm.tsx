@@ -3,7 +3,6 @@ import { X, CheckCircle } from 'lucide-react';
 import { Job } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
 import { applicationService } from '../../services/applicationService';
-import { storageService } from '../../services/storageService';
 import DocumentUpload from './DocumentUpload';
 
 interface PublicApplicationFormProps {
@@ -33,11 +32,6 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
-  const [uploadProgress, setUploadProgress] = useState<{
-    resume?: number;
-    coverLetter?: number;
-    portfolio?: number;
-  }>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,89 +39,38 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
     setError('');
 
     try {
-      // Upload files to Firebase Storage
+      // For now, we'll store document metadata without uploading files
+      // This avoids CORS issues with Firebase Storage
       const documents: any = {};
-      const userId = currentUser!.uid;
       
-      // Upload resume
       if (uploadedFiles.resume) {
-        try {
-          setUploadProgress(prev => ({ ...prev, resume: 0 }));
-          const resumeUrl = await storageService.uploadDocument(uploadedFiles.resume, 'resume', userId);
-          documents.resume = {
-            name: uploadedFiles.resume.name,
-            url: resumeUrl,
-            size: uploadedFiles.resume.size,
-            type: uploadedFiles.resume.type,
-            uploadedAt: new Date(),
-            status: 'uploaded'
-          };
-          setUploadProgress(prev => ({ ...prev, resume: 100 }));
-        } catch (uploadError) {
-          console.error('Resume upload failed:', uploadError);
-          documents.resume = {
-            name: uploadedFiles.resume.name,
-            size: uploadedFiles.resume.size,
-            type: uploadedFiles.resume.type,
-            uploadedAt: new Date(),
-            status: 'failed',
-            error: 'Upload failed - file will be processed manually'
-          };
-        }
+        documents.resume = {
+          name: uploadedFiles.resume.name,
+          size: uploadedFiles.resume.size,
+          type: uploadedFiles.resume.type,
+          uploadedAt: new Date(),
+          status: 'pending_upload'
+        };
       }
 
-      // Upload cover letter
       if (uploadedFiles.coverLetter) {
-        try {
-          setUploadProgress(prev => ({ ...prev, coverLetter: 0 }));
-          const coverLetterUrl = await storageService.uploadDocument(uploadedFiles.coverLetter, 'coverLetter', userId);
-          documents.coverLetter = {
-            name: uploadedFiles.coverLetter.name,
-            url: coverLetterUrl,
-            size: uploadedFiles.coverLetter.size,
-            type: uploadedFiles.coverLetter.type,
-            uploadedAt: new Date(),
-            status: 'uploaded'
-          };
-          setUploadProgress(prev => ({ ...prev, coverLetter: 100 }));
-        } catch (uploadError) {
-          console.error('Cover letter upload failed:', uploadError);
-          documents.coverLetter = {
-            name: uploadedFiles.coverLetter.name,
-            size: uploadedFiles.coverLetter.size,
-            type: uploadedFiles.coverLetter.type,
-            uploadedAt: new Date(),
-            status: 'failed',
-            error: 'Upload failed - file will be processed manually'
-          };
-        }
+        documents.coverLetter = {
+          name: uploadedFiles.coverLetter.name,
+          size: uploadedFiles.coverLetter.size,
+          type: uploadedFiles.coverLetter.type,
+          uploadedAt: new Date(),
+          status: 'pending_upload'
+        };
       }
 
-      // Upload portfolio
       if (uploadedFiles.portfolio) {
-        try {
-          setUploadProgress(prev => ({ ...prev, portfolio: 0 }));
-          const portfolioUrl = await storageService.uploadDocument(uploadedFiles.portfolio, 'portfolio', userId);
-          documents.portfolio = {
-            name: uploadedFiles.portfolio.name,
-            url: portfolioUrl,
-            size: uploadedFiles.portfolio.size,
-            type: uploadedFiles.portfolio.type,
-            uploadedAt: new Date(),
-            status: 'uploaded'
-          };
-          setUploadProgress(prev => ({ ...prev, portfolio: 100 }));
-        } catch (uploadError) {
-          console.error('Portfolio upload failed:', uploadError);
-          documents.portfolio = {
-            name: uploadedFiles.portfolio.name,
-            size: uploadedFiles.portfolio.size,
-            type: uploadedFiles.portfolio.type,
-            uploadedAt: new Date(),
-            status: 'failed',
-            error: 'Upload failed - file will be processed manually'
-          };
-        }
+        documents.portfolio = {
+          name: uploadedFiles.portfolio.name,
+          size: uploadedFiles.portfolio.size,
+          type: uploadedFiles.portfolio.type,
+          uploadedAt: new Date(),
+          status: 'pending_upload'
+        };
       }
 
       const applicationData = {
@@ -219,28 +162,7 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
           {isSubmitting && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center space-x-3">
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-blue-900">Submitting your application...</p>
-                {Object.keys(uploadProgress).length > 0 && (
-                  <div className="mt-2 space-y-1">
-                    {uploadProgress.resume !== undefined && (
-                      <div className="text-xs text-blue-700">
-                        Resume: {uploadProgress.resume}%
-                      </div>
-                    )}
-                    {uploadProgress.coverLetter !== undefined && (
-                      <div className="text-xs text-blue-700">
-                        Cover Letter: {uploadProgress.coverLetter}%
-                      </div>
-                    )}
-                    {uploadProgress.portfolio !== undefined && (
-                      <div className="text-xs text-blue-700">
-                        Portfolio: {uploadProgress.portfolio}%
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+              <p className="text-sm font-medium text-blue-900">Submitting your application...</p>
             </div>
           )}
 

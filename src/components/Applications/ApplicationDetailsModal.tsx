@@ -186,14 +186,8 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                           <div>
                             <p className="font-medium text-gray-900">Resume</p>
                             <p className="text-sm text-gray-600">{application.documents.resume.name}</p>
-                            {application.documents.resume.status === 'uploaded' && (
-                              <p className="text-xs text-green-600">✓ Successfully uploaded</p>
-                            )}
-                            {application.documents.resume.status === 'failed' && (
-                              <p className="text-xs text-red-600">⚠ Upload failed</p>
-                            )}
                             {application.documents.resume.status === 'pending_upload' && (
-                              <p className="text-xs text-orange-600">⏳ File pending upload</p>
+                              <p className="text-xs text-orange-600">File pending upload</p>
                             )}
                           </div>
                         </div>
@@ -214,12 +208,8 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                               </button>
                             </>
                           ) : (
-                            <span className={`text-xs px-2 py-1 rounded ${
-                              application.documents.resume.status === 'failed' 
-                                ? 'text-red-600 bg-red-100' 
-                                : 'text-gray-500 bg-gray-100'
-                            }`}>
-                              {application.documents.resume.status === 'failed' ? 'Upload failed' : 'File not available'}
+                            <span className="text-xs text-gray-500 px-2 py-1 bg-gray-100 rounded">
+                              File not uploaded
                             </span>
                           )}
                         </div>
@@ -233,14 +223,8 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                           <div>
                             <p className="font-medium text-gray-900">Cover Letter</p>
                             <p className="text-sm text-gray-600">{application.documents.coverLetter.name}</p>
-                            {application.documents.coverLetter.status === 'uploaded' && (
-                              <p className="text-xs text-green-600">✓ Successfully uploaded</p>
-                            )}
-                            {application.documents.coverLetter.status === 'failed' && (
-                              <p className="text-xs text-red-600">⚠ Upload failed</p>
-                            )}
                             {application.documents.coverLetter.status === 'pending_upload' && (
-                              <p className="text-xs text-orange-600">⏳ File pending upload</p>
+                              <p className="text-xs text-orange-600">File pending upload</p>
                             )}
                           </div>
                         </div>
@@ -261,12 +245,8 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                               </button>
                             </>
                           ) : (
-                            <span className={`text-xs px-2 py-1 rounded ${
-                              application.documents.coverLetter.status === 'failed' 
-                                ? 'text-red-600 bg-red-100' 
-                                : 'text-gray-500 bg-gray-100'
-                            }`}>
-                              {application.documents.coverLetter.status === 'failed' ? 'Upload failed' : 'File not available'}
+                            <span className="text-xs text-gray-500 px-2 py-1 bg-gray-100 rounded">
+                              File not uploaded
                             </span>
                           )}
                         </div>
@@ -280,14 +260,8 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                           <div>
                             <p className="font-medium text-gray-900">Portfolio</p>
                             <p className="text-sm text-gray-600">{application.documents.portfolio.name}</p>
-                            {application.documents.portfolio.status === 'uploaded' && (
-                              <p className="text-xs text-green-600">✓ Successfully uploaded</p>
-                            )}
-                            {application.documents.portfolio.status === 'failed' && (
-                              <p className="text-xs text-red-600">⚠ Upload failed</p>
-                            )}
                             {application.documents.portfolio.status === 'pending_upload' && (
-                              <p className="text-xs text-orange-600">⏳ File pending upload</p>
+                              <p className="text-xs text-orange-600">File pending upload</p>
                             )}
                           </div>
                         </div>
@@ -308,12 +282,8 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                               </button>
                             </>
                           ) : (
-                            <span className={`text-xs px-2 py-1 rounded ${
-                              application.documents.portfolio.status === 'failed' 
-                                ? 'text-red-600 bg-red-100' 
-                                : 'text-gray-500 bg-gray-100'
-                            }`}>
-                              {application.documents.portfolio.status === 'failed' ? 'Upload failed' : 'File not available'}
+                            <span className="text-xs text-gray-500 px-2 py-1 bg-gray-100 rounded">
+                              File not uploaded
                             </span>
                           )}
                         </div>

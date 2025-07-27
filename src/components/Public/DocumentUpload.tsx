@@ -123,7 +123,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
               </div>
               <button
                 type="button"
-                <li>• Documents will be uploaded securely to our servers</li>
+                onClick={() => onFileRemove(type)}
                 className="p-1 text-gray-400 hover:text-red-600 transition-colors"
               >
                 <X className="w-4 h-4" />
