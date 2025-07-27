@@ -16,6 +16,7 @@ export interface Application {
       type?: string;
       status?: 'pending_upload' | 'uploaded' | 'failed';
       uploadedAt: Date;
+      error?: string;
     };
     coverLetter?: {
       name: string;
@@ -24,6 +25,7 @@ export interface Application {
       type?: string;
       status?: 'pending_upload' | 'uploaded' | 'failed';
       uploadedAt: Date;
+      error?: string;
     };
     portfolio?: {
       name: string;
@@ -32,6 +34,7 @@ export interface Application {
       type?: string;
       status?: 'pending_upload' | 'uploaded' | 'failed';
       uploadedAt: Date;
+      error?: string;
     };
   };
   status: 'pending' | 'reviewed' | 'interviewed' | 'hired' | 'rejected';
