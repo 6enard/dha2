@@ -34,7 +34,15 @@ const AppRoutes: React.FC = () => {
 
   // If applicant role is selected, show job board
   if (userRole === 'applicant') {
-    return <JobBoard onAuthRequired={() => setShowApplicantAuth(true)} onBack={() => setUserRole(null)} />;
+    return (
+      <JobBoard 
+        onAuthRequired={() => setShowApplicantAuth(true)} 
+        onBack={() => {
+          setUserRole(null);
+          setShowApplicantAuth(false);
+        }} 
+      />
+    );
   }
 
   // If HR role is selected but not logged in, show login

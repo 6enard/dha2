@@ -37,7 +37,7 @@ const JobBoard: React.FC<JobBoardProps> = ({ onAuthRequired, onBack }) => {
   });
 
   const handleApplyClick = (job: Job) => {
-    if (!currentUser) {
+    if (!currentUser || currentUser.role !== 'applicant') {
       onAuthRequired();
       return;
     }

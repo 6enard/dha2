@@ -44,6 +44,7 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
       // Check if resume is uploaded (required)
       if (!uploadedFiles.resume) {
         setError('Please upload your resume to continue.');
+        setIsSubmitting(false);
         return;
       }
 
@@ -96,7 +97,7 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
       setUploadProgress(100);
       setIsSubmitted(true);
     } catch (err) {
-      setError('Failed to submit application. Please try again.');
+      setError(`Failed to submit application: ${err instanceof Error ? err.message : 'Please try again.'}`);
       console.error('Error submitting application:', err);
     } finally {
       setIsSubmitting(false);

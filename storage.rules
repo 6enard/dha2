@@ -1,12 +1,8 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    // Allow anyone to upload resumes and cover letters
-    match /resumes/{allPaths=**} {
-      allow read, write: if true;
-    }
-    
-    match /cover-letters/{allPaths=**} {
+    // Allow anyone to upload documents
+    match /documents/{type}/{userId}/{allPaths=**} {
       allow read, write: if true;
     }
     
