@@ -9,7 +9,7 @@ import {
   orderBy, 
   where,
   Timestamp,
-  serverTimestamp
+  serverTimestamp,
   getDoc
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
