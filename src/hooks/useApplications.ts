@@ -32,6 +32,26 @@ export const useApplications = () => {
     }
   };
 
+  const createApplication = async (applicationData: Omit<Application, 'id' | 'appliedDate'>) => {
+    try {
+      await applicationService.createApplication(applicationData);
+      await fetchApplications();
+    } catch (err) {
+      setError('Failed to create application');
+      console.error('Error creating application:', err);
+    }
+  };
+
+  const updateApplication = async (applicationId: string, updates: Partial<Application>) => {
+    try {
+      await applicationService.updateApplication(applicationId, updates);
+      await fetchApplications();
+    } catch (err) {
+      setError('Failed to update application');
+      console.error('Error updating application:', err);
+    }
+  };
+
   const deleteApplication = async (applicationId: string) => {
     try {
       await applicationService.deleteApplication(applicationId);
@@ -52,6 +72,8 @@ export const useApplications = () => {
     loading,
     error,
     refetch: fetchApplications,
+    createApplication,
+    updateApplication,
     updateApplicationStatus,
     deleteApplication
   };

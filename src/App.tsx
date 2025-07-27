@@ -5,6 +5,7 @@ import Layout from './components/Layout/Layout';
 import Login from './components/Auth/Login';
 import Dashboard from './pages/Dashboard';
 import Applications from './pages/Applications';
+import Jobs from './pages/Jobs';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { currentUser } = useAuth();
@@ -25,7 +26,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/applications" element={<Applications />} />
         <Route path="/candidates" element={<div className="p-6"><h1 className="text-2xl font-bold">Candidates - Coming Soon</h1></div>} />
         <Route path="/interviews" element={<div className="p-6"><h1 className="text-2xl font-bold">Interviews - Coming Soon</h1></div>} />
-        <Route path="/jobs" element={<div className="p-6"><h1 className="text-2xl font-bold">Jobs - Coming Soon</h1></div>} />
+        <Route path="/jobs" element={<Jobs />} />
         <Route path="/settings" element={<div className="p-6"><h1 className="text-2xl font-bold">Settings - Coming Soon</h1></div>} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

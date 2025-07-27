@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Search, Filter, Download, Eye, MoreHorizontal, Clock, CheckCircle, XCircle, Calendar, FileText, Trash2, Edit } from 'lucide-react';
+import { Search, Filter, Download, Eye, MoreHorizontal, Clock, CheckCircle, XCircle, Calendar, FileText, Trash2, Edit, Plus } from 'lucide-react';
 import { useApplications } from '../hooks/useApplications';
+import ApplicationForm from '../components/Applications/ApplicationForm';
 import { Application } from '../types';
 
 const Applications: React.FC = () => {
@@ -8,8 +9,22 @@ const Applications: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
   const [showStatusModal, setShowStatusModal] = useState(false);
+  const [showApplicationForm, setShowApplicationForm] = useState(false);
+  const [editingApplication, setEditingApplication] = useState<Application | null>(null);
   
-  const { applications, loading, error, updateApplicationStatus, deleteApplication } = useApplications();
+  const { applications, loading, error, updateApplicationStatus, deleteApplication, createApplication, updateApplication } = useApplications();
+
+  const handleCreateApplication = async (applicationData: Omit<Application, 'id' | 'appliedDate'>) => {
+    await createApplication(applicationData);
+    setShowApplicationForm(false);
+  };
+
+  const handleUpdateApplication = async (applicationData: Omit<Application, 'id' | 'appliedDate'>) => {
+    if (editingApplication) {
+      await updateApplication(editingApplication.id, applicationData);
+      setEditingApplication(null);
+    }
+  };
 
   const handleStatusChange = async (applicationId: string, newStatus: Application['status']) => {
     await updateApplicationStatus(applicationId, newStatus);
@@ -108,10 +123,19 @@ const Applications: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-900">Applications</h1>
           <p className="text-gray-600 mt-1">Manage and review all job applications</p>
         </div>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center space-x-2">
-          <Download className="w-4 h-4" />
-          <span>Export</span>
-        </button>
+        <div className="flex items-center space-x-3">
+          <button 
+            onClick={() => setShowApplicationForm(true)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center space-x-2"
+          >
+            <Plus className="w-4 h-4" />
+            <span>New Application</span>
+          </button>
+          <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center space-x-2">
+            <Download className="w-4 h-4" />
+            <span>Export</span>
+          </button>
+        </div>
       </div>
 
       {/* Search and Filters */}
@@ -211,8 +235,7 @@ const Applications: React.FC = () => {
                       </button>
                       <button 
                         onClick={() => {
-                          setSelectedApplication(application);
-                          setShowStatusModal(true);
+                          setEditingApplication(application);
                         }}
                         className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                       >
@@ -274,6 +297,24 @@ const Applications: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Application Form Modal */}
+      {showApplicationForm && (
+        <ApplicationForm
+          onSubmit={handleCreateApplication}
+          onClose={() => setShowApplicationForm(false)}
+        />
+      )}
+
+      {/* Edit Application Modal */}
+      {editingApplication && (
+        <ApplicationForm
+          onSubmit={handleUpdateApplication}
+          onClose={() => setEditingApplication(null)}
+          initialData={editingApplication}
+          isEditing={true}
+        />
       )}
     </div>
   );

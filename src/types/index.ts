@@ -17,6 +17,20 @@ export interface Application {
   salary?: string;
 }
 
+export interface Job {
+  id: string;
+  title: string;
+  department: string;
+  location: string;
+  type: 'full-time' | 'part-time' | 'contract' | 'internship';
+  description: string;
+  requirements: string[];
+  benefits: string[];
+  salaryRange?: string;
+  status: 'active' | 'paused' | 'closed';
+  createdDate: Date;
+}
+
 export interface User {
   uid: string;
   email: string;
