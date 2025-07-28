@@ -46,16 +46,17 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
       }
 
       // Upload documents to Firebase Storage
+      // Upload documents to Firestore
       const documents: any = {};
       
       if (uploadedFiles.resume) {
         try {
           console.log('Uploading resume...');
-          const resumeUrl = await storageService.uploadDocument(uploadedFiles.resume, 'resume', currentUser!.uid);
-          console.log('Resume uploaded successfully:', resumeUrl);
+          const resumeId = await storageService.uploadDocument(uploadedFiles.resume, 'resume', currentUser!.uid);
+          console.log('Resume uploaded successfully:', resumeId);
           documents.resume = {
             name: uploadedFiles.resume.name,
-            url: resumeUrl,
+            url: resumeId,
             size: uploadedFiles.resume.size,
             type: uploadedFiles.resume.type,
             uploadedAt: new Date(),
@@ -70,11 +71,11 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
       if (uploadedFiles.coverLetter) {
         try {
           console.log('Uploading cover letter...');
-          const coverLetterUrl = await storageService.uploadDocument(uploadedFiles.coverLetter, 'coverLetter', currentUser!.uid);
-          console.log('Cover letter uploaded successfully:', coverLetterUrl);
+          const coverLetterId = await storageService.uploadDocument(uploadedFiles.coverLetter, 'coverLetter', currentUser!.uid);
+          console.log('Cover letter uploaded successfully:', coverLetterId);
           documents.coverLetter = {
             name: uploadedFiles.coverLetter.name,
-            url: coverLetterUrl,
+            url: coverLetterId,
             size: uploadedFiles.coverLetter.size,
             type: uploadedFiles.coverLetter.type,
             uploadedAt: new Date(),
@@ -90,11 +91,11 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
       if (uploadedFiles.portfolio) {
         try {
           console.log('Uploading portfolio...');
-          const portfolioUrl = await storageService.uploadDocument(uploadedFiles.portfolio, 'portfolio', currentUser!.uid);
-          console.log('Portfolio uploaded successfully:', portfolioUrl);
+          const portfolioId = await storageService.uploadDocument(uploadedFiles.portfolio, 'portfolio', currentUser!.uid);
+          console.log('Portfolio uploaded successfully:', portfolioId);
           documents.portfolio = {
             name: uploadedFiles.portfolio.name,
-            url: portfolioUrl,
+            url: portfolioId,
             size: uploadedFiles.portfolio.size,
             type: uploadedFiles.portfolio.type,
             uploadedAt: new Date(),

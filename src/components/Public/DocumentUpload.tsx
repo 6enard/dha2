@@ -55,7 +55,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
   };
 
   const validateFile = (file: File, type: string): boolean => {
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    const maxSize = 5 * 1024 * 1024; // 5MB (reduced for Firestore)
     const allowedTypes = [
       'application/pdf',
       'application/msword',
@@ -64,7 +64,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
     ];
 
     if (file.size > maxSize) {
-      alert('File size must be less than 10MB');
+      alert('File size must be less than 5MB');
       return false;
     }
 
@@ -154,6 +154,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
               </button>
             </p>
             <p className="text-xs text-gray-500">PDF, DOC, DOCX, TXT (max 10MB)</p>
+            <p className="text-xs text-gray-500">PDF, DOC, DOCX, TXT (max 5MB)</p>
             
             <input
               ref={inputRef}

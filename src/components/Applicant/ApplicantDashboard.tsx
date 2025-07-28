@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FileText, Clock, CheckCircle, XCircle, Calendar, Eye, ArrowLeft, User, Mail, Phone, MapPin } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { applicationService } from '../../services/applicationService';
+import { storageService } from '../../services/storageService';
 import { Application } from '../../types';
 
 interface ApplicantDashboardProps {
@@ -91,6 +92,19 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onBack, onBrows
         return 'Thank you for your interest. We have decided to move forward with other candidates.';
       default:
         return 'Application status unknown.';
+    }
+  };
+
+  const handleDocumentView = async (documentId: string) => {
+    try {
+      const document = await storageService.getDocument(documentId);
+      if (document) {
+        const downloadUrl = storageService.createDownloadUrl(document.base64Data, document.fileType);
+        window.open(downloadUrl, '_blank');
+      }
+    } catch (error) {
+      console.error('Error viewing document:', error);
+      alert('Failed to load document');
     }
   };
 
@@ -288,7 +302,7 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onBack, onBrows
                         </div>
                         {selectedApplication.documents.resume.url && (
                           <button
-                            onClick={() => window.open(selectedApplication.documents!.resume!.url, '_blank')}
+                            onClick={() => handleDocumentView(selectedApplication.documents!.resume!.url!)}
                             className="text-blue-600 hover:text-blue-700 text-xs flex items-center space-x-1"
                           >
                             <Eye className="w-3 h-3" />
@@ -315,7 +329,7 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onBack, onBrows
                         </div>
                         {selectedApplication.documents.coverLetter.url && (
                           <button
-                            onClick={() => window.open(selectedApplication.documents!.coverLetter!.url, '_blank')}
+                            onClick={() => handleDocumentView(selectedApplication.documents!.coverLetter!.url!)}
                             className="text-blue-600 hover:text-blue-700 text-xs flex items-center space-x-1"
                           >
                             <Eye className="w-3 h-3" />
@@ -342,7 +356,7 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onBack, onBrows
                         </div>
                         {selectedApplication.documents.portfolio.url && (
                           <button
-                            onClick={() => window.open(selectedApplication.documents!.portfolio!.url, '_blank')}
+                            onClick={() => handleDocumentView(selectedApplication.documents!.portfolio!.url!)}
                             className="text-blue-600 hover:text-blue-700 text-xs flex items-center space-x-1"
                           >
                             <Eye className="w-3 h-3" />
