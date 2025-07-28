@@ -176,7 +176,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
           <div>
             <h4 className="font-medium text-blue-900">Document Upload Guidelines</h4>
             <ul className="text-sm text-blue-800 mt-1 space-y-1">
-              <li>• Documents will be available to HR immediately after submission</li>
+              <li>• Documents will be securely uploaded and available to HR for review</li>
               <li>• Accepted formats: PDF, DOC, DOCX, TXT</li>
               <li>• Maximum file size: 10MB per document</li>
               <li>• Ensure documents are up-to-date and relevant</li>

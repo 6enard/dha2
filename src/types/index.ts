@@ -14,7 +14,7 @@ export interface Application {
       url?: string;
       size?: number;
       type?: string;
-      status?: 'pending_upload' | 'uploaded' | 'failed';
+      status?: 'uploaded' | 'failed';
       uploadedAt: Date;
     };
     coverLetter?: {
@@ -22,7 +22,7 @@ export interface Application {
       url?: string;
       size?: number;
       type?: string;
-      status?: 'pending_upload' | 'uploaded' | 'failed';
+      status?: 'uploaded' | 'failed';
       uploadedAt: Date;
     };
     portfolio?: {
@@ -30,7 +30,7 @@ export interface Application {
       url?: string;
       size?: number;
       type?: string;
-      status?: 'pending_upload' | 'uploaded' | 'failed';
+      status?: 'uploaded' | 'failed';
       uploadedAt: Date;
     };
   };

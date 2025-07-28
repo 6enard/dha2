@@ -77,8 +77,14 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
   };
 
   const handleDocumentDownload = (documentUrl: string, documentName: string) => {
-    // In a real app, this would handle secure document download
-    window.open(documentUrl, '_blank');
+    // Create a temporary link to download the file
+    const link = document.createElement('a');
+    link.href = documentUrl;
+    link.download = documentName;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -192,15 +198,37 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                                 'Size unknown'
                               } • {application.documents.resume.type || 'Unknown type'}
                             </p>
-                            {application.documents.resume.status === 'pending_upload' && (
-                              <p className="text-xs text-orange-600">Document uploaded by applicant - ready for review</p>
+                            {application.documents.resume.status === 'uploaded' && (
+                              <p className="text-xs text-green-600">Document successfully uploaded</p>
+                            )}
+                            {application.documents.resume.status === 'failed' && (
+                              <p className="text-xs text-red-600">Upload failed - please contact applicant</p>
                             )}
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <span className="text-xs text-blue-600 px-2 py-1 bg-blue-100 rounded">
-                            Document Available
-                          </span>
+                          {application.documents.resume.url && application.documents.resume.status === 'uploaded' ? (
+                            <>
+                              <button
+                                onClick={() => window.open(application.documents.resume!.url, '_blank')}
+                                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                title="View Document"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDocumentDownload(application.documents.resume!.url!, application.documents.resume!.name)}
+                                className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                title="Download Document"
+                              >
+                                <Download className="w-4 h-4" />
+                              </button>
+                            </>
+                          ) : (
+                            <span className="text-xs text-gray-600 px-2 py-1 bg-gray-100 rounded">
+                              {application.documents.resume.status === 'failed' ? 'Upload Failed' : 'Processing'}
+                            </span>
+                          )}
                         </div>
                       </div>
                     )}
@@ -218,15 +246,37 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                                 'Size unknown'
                               } • {application.documents.coverLetter.type || 'Unknown type'}
                             </p>
-                            {application.documents.coverLetter.status === 'pending_upload' && (
-                              <p className="text-xs text-orange-600">Document uploaded by applicant - ready for review</p>
+                            {application.documents.coverLetter.status === 'uploaded' && (
+                              <p className="text-xs text-green-600">Document successfully uploaded</p>
+                            )}
+                            {application.documents.coverLetter.status === 'failed' && (
+                              <p className="text-xs text-red-600">Upload failed - please contact applicant</p>
                             )}
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <span className="text-xs text-blue-600 px-2 py-1 bg-blue-100 rounded">
-                            Document Available
-                          </span>
+                          {application.documents.coverLetter.url && application.documents.coverLetter.status === 'uploaded' ? (
+                            <>
+                              <button
+                                onClick={() => window.open(application.documents.coverLetter!.url, '_blank')}
+                                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                title="View Document"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDocumentDownload(application.documents.coverLetter!.url!, application.documents.coverLetter!.name)}
+                                className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                title="Download Document"
+                              >
+                                <Download className="w-4 h-4" />
+                              </button>
+                            </>
+                          ) : (
+                            <span className="text-xs text-gray-600 px-2 py-1 bg-gray-100 rounded">
+                              {application.documents.coverLetter.status === 'failed' ? 'Upload Failed' : 'Processing'}
+                            </span>
+                          )}
                         </div>
                       </div>
                     )}
@@ -244,24 +294,40 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                                 'Size unknown'
                               } • {application.documents.portfolio.type || 'Unknown type'}
                             </p>
-                            {application.documents.portfolio.status === 'pending_upload' && (
-                              <p className="text-xs text-orange-600">Document uploaded by applicant - ready for review</p>
+                            {application.documents.portfolio.status === 'uploaded' && (
+                              <p className="text-xs text-green-600">Document successfully uploaded</p>
+                            )}
+                            {application.documents.portfolio.status === 'failed' && (
+                              <p className="text-xs text-red-600">Upload failed - please contact applicant</p>
                             )}
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <span className="text-xs text-blue-600 px-2 py-1 bg-blue-100 rounded">
-                            Document Available
-                          </span>
+                          {application.documents.portfolio.url && application.documents.portfolio.status === 'uploaded' ? (
+                            <>
+                              <button
+                                onClick={() => window.open(application.documents.portfolio!.url, '_blank')}
+                                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                title="View Document"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDocumentDownload(application.documents.portfolio!.url!, application.documents.portfolio!.name)}
+                                className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                title="Download Document"
+                              >
+                                <Download className="w-4 h-4" />
+                              </button>
+                            </>
+                          ) : (
+                            <span className="text-xs text-gray-600 px-2 py-1 bg-gray-100 rounded">
+                              {application.documents.portfolio.status === 'failed' ? 'Upload Failed' : 'Processing'}
+                            </span>
+                          )}
                         </div>
                       </div>
                     )}
-                  </div>
-                  <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                    <p className="text-sm text-blue-800">
-                      <strong>Note:</strong> Documents are stored securely and are available for review. 
-                      In a production environment, you would have secure download links to access these files.
-                    </p>
                   </div>
                 </div>
               )}

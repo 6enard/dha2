@@ -3,6 +3,7 @@ import { X, CheckCircle } from 'lucide-react';
 import { Job } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
 import { applicationService } from '../../services/applicationService';
+import { storageService } from '../../services/storageService';
 import DocumentUpload from './DocumentUpload';
 
 interface PublicApplicationFormProps {
@@ -39,38 +40,76 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
     setError('');
 
     try {
-      // For now, we'll store document metadata without uploading files
-      // This avoids CORS issues with Firebase Storage
+      // Upload documents to Firebase Storage
       const documents: any = {};
       
       if (uploadedFiles.resume) {
-        documents.resume = {
-          name: uploadedFiles.resume.name,
-          size: uploadedFiles.resume.size,
-          type: uploadedFiles.resume.type,
-          uploadedAt: new Date(),
-          status: 'pending_upload'
-        };
+        try {
+          const resumeUrl = await storageService.uploadDocument(uploadedFiles.resume, 'resume', currentUser!.uid);
+          documents.resume = {
+            name: uploadedFiles.resume.name,
+            url: resumeUrl,
+            size: uploadedFiles.resume.size,
+            type: uploadedFiles.resume.type,
+            uploadedAt: new Date(),
+            status: 'uploaded'
+          };
+        } catch (error) {
+          console.error('Error uploading resume:', error);
+          documents.resume = {
+            name: uploadedFiles.resume.name,
+            size: uploadedFiles.resume.size,
+            type: uploadedFiles.resume.type,
+            uploadedAt: new Date(),
+            status: 'failed'
+          };
+        }
       }
 
       if (uploadedFiles.coverLetter) {
-        documents.coverLetter = {
-          name: uploadedFiles.coverLetter.name,
-          size: uploadedFiles.coverLetter.size,
-          type: uploadedFiles.coverLetter.type,
-          uploadedAt: new Date(),
-          status: 'pending_upload'
-        };
+        try {
+          const coverLetterUrl = await storageService.uploadDocument(uploadedFiles.coverLetter, 'coverLetter', currentUser!.uid);
+          documents.coverLetter = {
+            name: uploadedFiles.coverLetter.name,
+            url: coverLetterUrl,
+            size: uploadedFiles.coverLetter.size,
+            type: uploadedFiles.coverLetter.type,
+            uploadedAt: new Date(),
+            status: 'uploaded'
+          };
+        } catch (error) {
+          console.error('Error uploading cover letter:', error);
+          documents.coverLetter = {
+            name: uploadedFiles.coverLetter.name,
+            size: uploadedFiles.coverLetter.size,
+            type: uploadedFiles.coverLetter.type,
+            uploadedAt: new Date(),
+            status: 'failed'
+          };
+        }
       }
 
       if (uploadedFiles.portfolio) {
-        documents.portfolio = {
-          name: uploadedFiles.portfolio.name,
-          size: uploadedFiles.portfolio.size,
-          type: uploadedFiles.portfolio.type,
-          uploadedAt: new Date(),
-          status: 'pending_upload'
-        };
+        try {
+          const portfolioUrl = await storageService.uploadDocument(uploadedFiles.portfolio, 'portfolio', currentUser!.uid);
+          documents.portfolio = {
+            name: uploadedFiles.portfolio.name,
+            url: portfolioUrl,
+            size: uploadedFiles.portfolio.size,
+            type: uploadedFiles.portfolio.type,
+            uploadedAt: new Date(),
+            status: 'uploaded'
+          };
+        } catch (error) {
+          console.error('Error uploading portfolio:', error);
+          documents.portfolio = {
+            name: uploadedFiles.portfolio.name,
+            size: uploadedFiles.portfolio.size,
+            type: uploadedFiles.portfolio.type,
+            uploadedAt: new Date(),
+            status: 'failed'
+          };
+        }
       }
 
       const applicationData = {
