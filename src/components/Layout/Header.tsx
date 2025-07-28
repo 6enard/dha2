@@ -8,10 +8,11 @@ const Header: React.FC = () => {
   const handleBackToRoleSelection = () => {
     window.location.reload(); // Simple way to reset the app state
   };
+
   return (
-    <header className="bg-white border-b border-gray-200 px-4 sm:px-6 py-4">
+    <header className="bg-white border-b border-gray-200 px-4 sm:px-6 py-4 lg:ml-0">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2 sm:space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4 ml-12 lg:ml-0">
           <button
             onClick={handleBackToRoleSelection}
             className="hidden sm:flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
@@ -28,7 +29,7 @@ const Header: React.FC = () => {
         </div>
 
         <div className="hidden md:flex flex-1 max-w-lg mx-4">
-          <div className="relative">
+          <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
@@ -50,7 +51,7 @@ const Header: React.FC = () => {
             </div>
             <div className="hidden sm:block text-sm">
               <p className="font-medium text-gray-900">{currentUser?.displayName || 'HR Manager'}</p>
-              <p className="text-gray-500">{currentUser?.email}</p>
+              <p className="text-gray-500 truncate max-w-32">{currentUser?.email}</p>
             </div>
           </div>
         </div>
