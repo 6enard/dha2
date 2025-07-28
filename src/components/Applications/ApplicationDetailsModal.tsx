@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, User, Mail, Phone, Calendar, FileText, Download, Eye, MessageSquare, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { Application } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
-import { applicationService } from '../../services/applicationService';
+import { storageService } from '../../services/storageService';
 
 interface ApplicationDetailsModalProps {
   application: Application;
@@ -76,9 +76,36 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
     }
   };
 
-  const handleDocumentDownload = (documentUrl: string, documentName: string) => {
-    // This function is no longer needed as we're using direct anchor links
-    window.open(documentUrl, '_blank');
+  const handleDocumentView = async (documentId: string) => {
+    try {
+      const document = await storageService.getDocument(documentId);
+      if (document) {
+        const downloadUrl = storageService.createDownloadUrl(document.base64Data, document.fileType);
+        window.open(downloadUrl, '_blank');
+      }
+    } catch (error) {
+      console.error('Error viewing document:', error);
+      alert('Failed to load document');
+    }
+  };
+
+  const handleDocumentDownload = async (documentId: string, fileName: string) => {
+    try {
+      const document = await storageService.getDocument(documentId);
+      if (document) {
+        const downloadUrl = storageService.createDownloadUrl(document.base64Data, document.fileType);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(downloadUrl);
+      }
+    } catch (error) {
+      console.error('Error downloading document:', error);
+      alert('Failed to download document');
+    }
   };
 
   return (
@@ -204,22 +231,19 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                           {application.documents.resume.url && application.documents.resume.status === 'uploaded' ? (
                             <>
                               <button
-                                onClick={() => window.open(application.documents.resume!.url, '_blank')}
+                                onClick={() => handleDocumentView(application.documents.resume!.url!)}
                                 className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                 title="View Document"
                               >
                                 <Eye className="w-4 h-4" />
                               </button>
-                              <a
-                                href={application.documents.resume.url}
-                                download={application.documents.resume.name}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                              <button
+                                onClick={() => handleDocumentDownload(application.documents.resume!.url!, application.documents.resume!.name)}
                                 className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                                 title="Download Document"
                               >
                                 <Download className="w-4 h-4" />
-                              </a>
+                              </button>
                             </>
                           ) : (
                             <span className="text-xs text-gray-600 px-2 py-1 bg-gray-100 rounded">
@@ -255,22 +279,19 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                           {application.documents.coverLetter.url && application.documents.coverLetter.status === 'uploaded' ? (
                             <>
                               <button
-                                onClick={() => window.open(application.documents.coverLetter!.url, '_blank')}
+                                onClick={() => handleDocumentView(application.documents.coverLetter!.url!)}
                                 className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                 title="View Document"
                               >
                                 <Eye className="w-4 h-4" />
                               </button>
-                              <a
-                                href={application.documents.coverLetter.url}
-                                download={application.documents.coverLetter.name}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                              <button
+                                onClick={() => handleDocumentDownload(application.documents.coverLetter!.url!, application.documents.coverLetter!.name)}
                                 className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                                 title="Download Document"
                               >
                                 <Download className="w-4 h-4" />
-                              </a>
+                              </button>
                             </>
                           ) : (
                             <span className="text-xs text-gray-600 px-2 py-1 bg-gray-100 rounded">
@@ -306,22 +327,19 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                           {application.documents.portfolio.url && application.documents.portfolio.status === 'uploaded' ? (
                             <>
                               <button
-                                onClick={() => window.open(application.documents.portfolio!.url, '_blank')}
+                                onClick={() => handleDocumentView(application.documents.portfolio!.url!)}
                                 className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                 title="View Document"
                               >
                                 <Eye className="w-4 h-4" />
                               </button>
-                              <a
-                                href={application.documents.portfolio.url}
-                                download={application.documents.portfolio.name}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                              <button
+                                onClick={() => handleDocumentDownload(application.documents.portfolio!.url!, application.documents.portfolio!.name)}
                                 className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                                 title="Download Document"
                               >
                                 <Download className="w-4 h-4" />
-                              </a>
+                              </button>
                             </>
                           ) : (
                             <span className="text-xs text-gray-600 px-2 py-1 bg-gray-100 rounded">
