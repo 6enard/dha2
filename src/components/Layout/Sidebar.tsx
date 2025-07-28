@@ -35,9 +35,11 @@ const Sidebar: React.FC = () => {
     <div className="bg-gray-900 text-white w-64 min-h-screen flex flex-col">
       <div className="p-6">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-            <Briefcase className="w-6 h-6" />
-          </div>
+          <img 
+            src="/DHALOGO.png" 
+            alt="Digital Health Agency" 
+            className="w-10 h-10 rounded-lg object-contain"
+          />
           <div>
             <h1 className="text-xl font-bold">DHA</h1>
             <p className="text-sm text-gray-400">HR Management</p>
