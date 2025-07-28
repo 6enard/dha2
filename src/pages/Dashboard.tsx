@@ -1,9 +1,13 @@
 import React from 'react';
+import { useState } from 'react';
 import { Users, FileText, Calendar, TrendingUp, Clock, CheckCircle, XCircle, UserCheck } from 'lucide-react';
 import { useApplications } from '../hooks/useApplications';
+import ApplicationDetailsModal from '../components/Applications/ApplicationDetailsModal';
+import { Application } from '../types';
 
 const Dashboard: React.FC = () => {
   const { applications, loading } = useApplications();
+  const [viewingApplication, setViewingApplication] = useState<Application | null>(null);
 
   const getStats = () => {
     if (loading || !applications.length) {
@@ -153,7 +157,11 @@ const Dashboard: React.FC = () => {
               </div>
             ) : (
               recentApplications.map((application) => (
-              <div key={application.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+              <div 
+                key={application.id} 
+                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+                onClick={() => setViewingApplication(application)}
+              >
                 <div className="flex items-center space-x-4">
                   <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
                     <span className="text-white font-medium">
@@ -183,6 +191,18 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Application Details Modal */}
+      {viewingApplication && (
+        <ApplicationDetailsModal
+          application={viewingApplication}
+          onClose={() => setViewingApplication(null)}
+          onStatusUpdate={async (applicationId, status, notes) => {
+            // This will be handled by the modal, we just need to close it
+            setViewingApplication(null);
+          }}
+        />
+      )}
     </div>
   );
 };

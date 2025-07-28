@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Clock, DollarSign, Building, Search, Filter } from 'lucide-react';
+import { MapPin, Clock, DollarSign, Building, Search, Filter, ArrowLeft } from 'lucide-react';
 import { useJobs } from '../../hooks/useJobs';
 import { useAuth } from '../../contexts/AuthContext';
 import ApplicationForm from './PublicApplicationForm';
@@ -96,6 +96,15 @@ const JobBoard: React.FC<JobBoardProps> = ({ onAuthRequired, onBack }) => {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
+            {currentUser && currentUser.role === 'applicant' && (
+              <button
+                onClick={onBack}
+                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors mr-6"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span className="text-sm">Back to My Applications</span>
+              </button>
+            )}
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Digital Health Agency</h1>
               <p className="text-gray-600 mt-1">Join our team and make a difference in healthcare</p>
