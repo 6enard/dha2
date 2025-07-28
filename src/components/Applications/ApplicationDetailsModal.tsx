@@ -78,9 +78,9 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
 
   const handleDocumentView = async (documentId: string) => {
     try {
-      const document = await storageService.getDocument(documentId);
-      if (document) {
-        const downloadUrl = storageService.createDownloadUrl(document.base64Data, document.fileType);
+      const retrievedDocument = await storageService.getDocument(documentId);
+      if (retrievedDocument) {
+        const downloadUrl = storageService.createDownloadUrl(retrievedDocument.base64Data, retrievedDocument.fileType);
         window.open(downloadUrl, '_blank');
       }
     } catch (error) {
@@ -91,9 +91,9 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
 
   const handleDocumentDownload = async (documentId: string, fileName: string) => {
     try {
-      const document = await storageService.getDocument(documentId);
-      if (document) {
-        const downloadUrl = storageService.createDownloadUrl(document.base64Data, document.fileType);
+      const retrievedDocument = await storageService.getDocument(documentId);
+      if (retrievedDocument) {
+        const downloadUrl = storageService.createDownloadUrl(retrievedDocument.base64Data, retrievedDocument.fileType);
         const link = document.createElement('a');
         link.href = downloadUrl;
         link.download = fileName;

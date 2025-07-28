@@ -97,9 +97,9 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onBack, onBrows
 
   const handleDocumentView = async (documentId: string) => {
     try {
-      const document = await storageService.getDocument(documentId);
-      if (document) {
-        const downloadUrl = storageService.createDownloadUrl(document.base64Data, document.fileType);
+      const retrievedDocument = await storageService.getDocument(documentId);
+      if (retrievedDocument) {
+        const downloadUrl = storageService.createDownloadUrl(retrievedDocument.base64Data, retrievedDocument.fileType);
         window.open(downloadUrl, '_blank');
       }
     } catch (error) {
