@@ -92,11 +92,6 @@ const Login: React.FC = () => {
           </button>
         </form>
 
-        <div className="mt-6 text-center text-sm text-gray-500">
-          <p>Demo Credentials:</p>
-          <p>Email: hr@digitalhealthagency.com</p>
-          <p>Password: password123</p>
-        </div>
       </div>
     </div>
   );

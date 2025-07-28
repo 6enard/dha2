@@ -112,23 +112,23 @@ const Dashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600 mt-1">Welcome back! Here's what's happening with your recruitment.</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-gray-600 mt-1 text-sm sm:text-base">Welcome back! Here's what's happening with your recruitment.</p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {stats.map((stat) => (
-          <div key={stat.name} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+          <div key={stat.name} className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center">
               <div className={`p-3 rounded-lg ${stat.color}`}>
-                <stat.icon className="w-6 h-6 text-white" />
+                <stat.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div className="ml-4 flex-1">
-                <p className="text-sm font-medium text-gray-600">{stat.name}</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-600">{stat.name}</p>
                 <div className="flex items-center">
-                  <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-                  <span className="ml-2 flex items-center text-sm text-green-600">
+                  <p className="text-xl sm:text-2xl font-bold text-gray-900">{stat.value}</p>
+                  <span className="ml-2 flex items-center text-xs sm:text-sm text-green-600">
                     <TrendingUp className="w-4 h-4 mr-1" />
                     {stat.change}
                   </span>
@@ -141,11 +141,11 @@ const Dashboard: React.FC = () => {
 
       {/* Recent Applications */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Recent Applications</h2>
-          <p className="text-sm text-gray-600">Latest candidate applications across all positions</p>
+        <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Recent Applications</h2>
+          <p className="text-sm text-gray-600 hidden sm:block">Latest candidate applications across all positions</p>
         </div>
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <div className="space-y-4">
             {loading ? (
               <div className="flex items-center justify-center py-8">
@@ -159,29 +159,30 @@ const Dashboard: React.FC = () => {
               recentApplications.map((application) => (
               <div 
                 key={application.id} 
-                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer space-y-3 sm:space-y-0"
                 onClick={() => setViewingApplication(application)}
               >
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-3 sm:space-x-4">
                   <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
                     <span className="text-white font-medium">
                       {application.firstName[0]}{application.lastName[0]}
                     </span>
                   </div>
                   <div>
-                    <h3 className="font-medium text-gray-900">{application.firstName} {application.lastName}</h3>
-                    <p className="text-sm text-gray-600">{application.position} • {application.experience}</p>
+                    <h3 className="font-medium text-gray-900 text-sm sm:text-base">{application.firstName} {application.lastName}</h3>
+                    <p className="text-xs sm:text-sm text-gray-600">{application.position} • {application.experience}</p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-4">
-                  <div className="text-right">
-                    <p className="text-sm text-gray-600">Applied on</p>
-                    <p className="text-sm font-medium text-gray-900">{formatDate(application.appliedDate)}</p>
+                <div className="flex items-center justify-between sm:justify-end space-x-4">
+                  <div className="text-left sm:text-right">
+                    <p className="text-xs sm:text-sm text-gray-600">Applied on</p>
+                    <p className="text-xs sm:text-sm font-medium text-gray-900">{formatDate(application.appliedDate)}</p>
                   </div>
                   <div className="flex items-center space-x-2">
                     {getStatusIcon(application.status)}
                     <span className={getStatusBadge(application.status)}>
-                      {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
+                      <span className="hidden sm:inline">{application.status.charAt(0).toUpperCase() + application.status.slice(1)}</span>
+                      <span className="sm:hidden">{application.status.charAt(0).toUpperCase()}</span>
                     </span>
                   </div>
                 </div>

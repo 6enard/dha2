@@ -119,28 +119,29 @@ const Applications: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Applications</h1>
-          <p className="text-gray-600 mt-1">Manage and review all job applications</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Applications</h1>
+          <p className="text-gray-600 mt-1 text-sm sm:text-base">Manage and review all job applications</p>
         </div>
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2 sm:space-x-3">
           <button 
             onClick={() => setShowApplicationForm(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center space-x-2"
+            className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center space-x-2 text-sm sm:text-base"
           >
             <Plus className="w-4 h-4" />
-            <span>New Application</span>
+            <span className="hidden sm:inline">New Application</span>
+            <span className="sm:hidden">New</span>
           </button>
-          <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center space-x-2">
+          <button className="bg-gray-100 text-gray-700 px-3 sm:px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center space-x-2 text-sm sm:text-base">
             <Download className="w-4 h-4" />
-            <span>Export</span>
+            <span className="hidden sm:inline">Export</span>
           </button>
         </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -155,18 +156,19 @@ const Applications: React.FC = () => {
           
           <div className="flex items-center space-x-2">
             <Filter className="w-5 h-5 text-gray-400" />
-            <div className="flex space-x-1">
+            <div className="flex flex-wrap gap-1">
               {filters.map((filter) => (
                 <button
                   key={filter.id}
                   onClick={() => setSelectedFilter(filter.id)}
-                  className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  className={`px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors ${
                     selectedFilter === filter.id
                       ? 'bg-blue-600 text-white'
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
                 >
-                  {filter.label} ({filter.count})
+                  <span className="hidden sm:inline">{filter.label} ({filter.count})</span>
+                  <span className="sm:hidden">{filter.label.split(' ')[0]} ({filter.count})</span>
                 </button>
               ))}
             </div>
@@ -176,7 +178,7 @@ const Applications: React.FC = () => {
 
       {/* Applications Table */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="hidden lg:block overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
@@ -257,6 +259,86 @@ const Applications: React.FC = () => {
               ))}
             </tbody>
           </table>
+        </div>
+        
+        {/* Mobile Card View */}
+        <div className="lg:hidden divide-y divide-gray-200">
+          {filteredApplications.map((application) => (
+            <div key={application.id} className="p-4 hover:bg-gray-50 transition-colors">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                    <span className="text-white font-medium text-sm">
+                      {application.firstName[0]}{application.lastName[0]}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900 text-sm">
+                      {application.firstName} {application.lastName}
+                    </p>
+                    <p className="text-xs text-gray-600">{application.email}</p>
+                  </div>
+                </div>
+                <span className={getStatusBadge(application.status)}>
+                  {getStatusIcon(application.status)}
+                  <span>{application.status.charAt(0).toUpperCase() + application.status.slice(1)}</span>
+                </span>
+              </div>
+              
+              <div className="space-y-2 mb-3">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Position:</span>
+                  <span className="font-medium text-gray-900">{application.position}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Experience:</span>
+                  <span className="text-gray-900">{application.experience}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Applied:</span>
+                  <span className="text-gray-900">{formatDate(application.appliedDate)}</span>
+                </div>
+              </div>
+              
+              {application.skills && application.skills.length > 0 && (
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {application.skills.slice(0, 3).map((skill, index) => (
+                    <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                      {skill}
+                    </span>
+                  ))}
+                  {application.skills.length > 3 && (
+                    <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                      +{application.skills.length - 3}
+                    </span>
+                  )}
+                </div>
+              )}
+              
+              <div className="flex items-center justify-end space-x-2">
+                <button 
+                  onClick={() => setViewingApplication(application)}
+                  className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                >
+                  <FileText className="w-4 h-4" />
+                </button>
+                <button 
+                  onClick={() => {
+                    setEditingApplication(application);
+                  }}
+                  className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                >
+                  <Edit className="w-4 h-4" />
+                </button>
+                <button 
+                  onClick={() => handleDeleteApplication(application.id)}
+                  className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

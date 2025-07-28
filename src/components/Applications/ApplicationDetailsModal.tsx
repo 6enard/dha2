@@ -110,19 +110,19 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto mx-4">
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3 sm:space-x-4">
             <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
               <span className="text-white font-medium text-lg">
                 {application.firstName[0]}{application.lastName[0]}
               </span>
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
                 {application.firstName} {application.lastName}
               </h2>
-              <p className="text-gray-600">{application.position}</p>
+              <p className="text-sm sm:text-base text-gray-600">{application.position}</p>
             </div>
           </div>
           <button
@@ -134,25 +134,25 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
         </div>
 
         <div className="p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
               {/* Contact Information */}
               <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 mb-3">Contact Information</h3>
+                <h3 className="font-medium text-gray-900 mb-3 text-sm sm:text-base">Contact Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex items-center space-x-3">
                     <Mail className="w-4 h-4 text-gray-400" />
                     <div>
-                      <p className="text-sm text-gray-600">Email</p>
-                      <p className="font-medium text-gray-900">{application.email}</p>
+                      <p className="text-xs sm:text-sm text-gray-600">Email</p>
+                      <p className="font-medium text-gray-900 text-sm sm:text-base">{application.email}</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
                     <Phone className="w-4 h-4 text-gray-400" />
                     <div>
-                      <p className="text-sm text-gray-600">Phone</p>
-                      <p className="font-medium text-gray-900">{application.phone}</p>
+                      <p className="text-xs sm:text-sm text-gray-600">Phone</p>
+                      <p className="font-medium text-gray-900 text-sm sm:text-base">{application.phone}</p>
                     </div>
                   </div>
                 </div>
@@ -161,21 +161,21 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
               {/* Professional Information */}
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-medium text-gray-900 mb-2">Experience</h3>
-                  <p className="text-gray-700">{application.experience}</p>
+                  <h3 className="font-medium text-gray-900 mb-2 text-sm sm:text-base">Experience</h3>
+                  <p className="text-gray-700 text-sm sm:text-base">{application.experience}</p>
                 </div>
 
                 <div>
-                  <h3 className="font-medium text-gray-900 mb-2">Education</h3>
-                  <p className="text-gray-700">{application.education}</p>
+                  <h3 className="font-medium text-gray-900 mb-2 text-sm sm:text-base">Education</h3>
+                  <p className="text-gray-700 text-sm sm:text-base">{application.education}</p>
                 </div>
 
                 {application.skills && application.skills.length > 0 && (
                   <div>
-                    <h3 className="font-medium text-gray-900 mb-2">Skills</h3>
+                    <h3 className="font-medium text-gray-900 mb-2 text-sm sm:text-base">Skills</h3>
                     <div className="flex flex-wrap gap-2">
                       {application.skills.map((skill, index) => (
-                        <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
+                        <span key={index} className="px-2 sm:px-3 py-1 bg-blue-100 text-blue-800 text-xs sm:text-sm rounded-full">
                           {skill}
                         </span>
                       ))}
@@ -185,8 +185,8 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
 
                 {application.salary && (
                   <div>
-                    <h3 className="font-medium text-gray-900 mb-2">Expected Salary</h3>
-                    <p className="text-gray-700">{application.salary}</p>
+                    <h3 className="font-medium text-gray-900 mb-2 text-sm sm:text-base">Expected Salary</h3>
+                    <p className="text-gray-700 text-sm sm:text-base">{application.salary}</p>
                   </div>
                 )}
               </div>
@@ -194,9 +194,9 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
               {/* Cover Letter */}
               {application.coverLetter && (
                 <div>
-                  <h3 className="font-medium text-gray-900 mb-2">Cover Letter</h3>
+                  <h3 className="font-medium text-gray-900 mb-2 text-sm sm:text-base">Cover Letter</h3>
                   <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-gray-700 whitespace-pre-wrap">{application.coverLetter}</p>
+                    <p className="text-gray-700 whitespace-pre-wrap text-sm sm:text-base">{application.coverLetter}</p>
                   </div>
                 </div>
               )}
@@ -204,7 +204,7 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
               {/* Documents */}
               {application.documents && (
                 <div>
-                  <h3 className="font-medium text-gray-900 mb-3">Documents</h3>
+                  <h3 className="font-medium text-gray-900 mb-3 text-sm sm:text-base">Documents</h3>
                   <div className="space-y-2">
                     {application.documents.resume && (
                       <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">

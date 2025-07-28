@@ -121,37 +121,45 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onBack, onBrows
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <button
                 onClick={onBack}
-                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+                className="hidden sm:flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span className="text-sm">Back to Role Selection</span>
               </button>
               <button
-                onClick={onBrowseJobs}
-                className="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors text-sm"
+                onClick={onBack}
+                className="sm:hidden p-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
-                Browse Jobs
+                <ArrowLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={onBrowseJobs}
+                className="bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors text-xs sm:text-sm"
+              >
+                <span className="hidden sm:inline">Browse Jobs</span>
+                <span className="sm:hidden">Jobs</span>
               </button>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
                   <User className="w-5 h-5 text-white" />
                 </div>
-                <div className="text-sm">
+                <div className="text-xs sm:text-sm">
                   <p className="font-medium text-gray-900">{currentUser?.displayName}</p>
-                  <p className="text-gray-500">{currentUser?.email}</p>
+                  <p className="text-gray-500 hidden sm:block">{currentUser?.email}</p>
                 </div>
               </div>
               <button
                 onClick={logout}
-                className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 transition-colors"
               >
-                Sign Out
+                <span className="hidden sm:inline">Sign Out</span>
+                <span className="sm:hidden">Out</span>
               </button>
             </div>
           </div>
@@ -160,30 +168,30 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onBack, onBrows
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">My Applications</h1>
-          <p className="text-gray-600 mt-1">Track the status of your job applications</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">My Applications</h1>
+          <p className="text-gray-600 mt-1 text-sm sm:text-base">Track the status of your job applications</p>
         </div>
 
         {applications.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 sm:p-12 text-center">
             <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No Applications Yet</h3>
-            <p className="text-gray-600 mb-6">You haven't applied for any positions yet.</p>
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">No Applications Yet</h3>
+            <p className="text-sm sm:text-base text-gray-600 mb-6">You haven't applied for any positions yet.</p>
             <button
               onClick={onBrowseJobs || onBack}
-              className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors"
+              className="bg-green-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium hover:bg-green-700 transition-colors text-sm sm:text-base"
             >
               Browse Jobs
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
             {applications.map((application) => (
-              <div key={application.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+              <div key={application.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 hover:shadow-md transition-shadow">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">{application.position}</h3>
-                    <p className="text-sm text-gray-600">Applied {formatDate(application.appliedDate)}</p>
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1">{application.position}</h3>
+                    <p className="text-xs sm:text-sm text-gray-600">Applied {formatDate(application.appliedDate)}</p>
                   </div>
                   <button
                     onClick={() => setSelectedApplication(application)}
@@ -204,7 +212,7 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onBack, onBrows
                   {getStatusMessage(application.status)}
                 </p>
 
-                <div className="text-xs text-gray-500 space-y-1">
+                <div className="text-xs text-gray-500 space-y-1 hidden sm:block">
                   <div className="flex items-center">
                     <Mail className="w-3 h-3 mr-1" />
                     {application.email}

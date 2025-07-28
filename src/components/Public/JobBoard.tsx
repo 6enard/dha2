@@ -94,23 +94,23 @@ const JobBoard: React.FC<JobBoardProps> = ({ onAuthRequired, onBack }) => {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0">
             {currentUser && currentUser.role === 'applicant' && (
               <button
                 onClick={onBack}
-                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors mr-6"
+                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors sm:mr-6 text-sm"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span className="text-sm">Back to My Applications</span>
               </button>
             )}
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Digital Health Agency</h1>
-              <p className="text-gray-600 mt-1">Join our team and make a difference in healthcare</p>
+            <div className="flex-1">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Digital Health Agency</h1>
+              <p className="text-gray-600 mt-1 text-sm sm:text-base">Join our team and make a difference in healthcare</p>
             </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-600">Looking for something specific?</p>
+            <div className="text-left sm:text-right">
+              <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">Looking for something specific?</p>
               <p className="text-sm font-medium text-blue-600">Browse {activeJobs.length} open positions</p>
             </div>
           </div>
@@ -119,7 +119,7 @@ const JobBoard: React.FC<JobBoardProps> = ({ onAuthRequired, onBack }) => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search and Filters */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="md:col-span-2">
               <div className="relative">
@@ -165,13 +165,13 @@ const JobBoard: React.FC<JobBoardProps> = ({ onAuthRequired, onBack }) => {
         </div>
 
         {/* Jobs Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {filteredJobs.map((job) => (
-            <div key={job.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <div key={job.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{job.title}</h3>
-                  <div className="flex items-center text-gray-600 mb-2">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{job.title}</h3>
+                  <div className="flex items-center text-gray-600 mb-2 text-sm sm:text-base">
                     <Building className="w-4 h-4 mr-2" />
                     <span>{job.department}</span>
                   </div>
@@ -179,30 +179,30 @@ const JobBoard: React.FC<JobBoardProps> = ({ onAuthRequired, onBack }) => {
               </div>
 
               <div className="space-y-2 mb-4">
-                <div className="flex items-center text-sm text-gray-600">
+                <div className="flex items-center text-xs sm:text-sm text-gray-600">
                   <MapPin className="w-4 h-4 mr-2" />
                   {job.location}
                 </div>
-                <div className="flex items-center text-sm text-gray-600">
+                <div className="flex items-center text-xs sm:text-sm text-gray-600">
                   {getJobTypeIcon(job.type)}
                   <span className="ml-2 capitalize">{job.type.replace('-', ' ')}</span>
                 </div>
                 {job.salaryRange && (
-                  <div className="flex items-center text-sm text-gray-600">
+                  <div className="flex items-center text-xs sm:text-sm text-gray-600">
                     <DollarSign className="w-4 h-4 mr-2" />
                     {job.salaryRange}
                   </div>
                 )}
               </div>
 
-              <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+              <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-3">
                 {job.description}
               </p>
 
               {job.requirements && job.requirements.length > 0 && (
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900 mb-2">Key Requirements:</h4>
-                  <ul className="text-sm text-gray-600 space-y-1">
+                  <h4 className="font-medium text-gray-900 mb-2 text-sm sm:text-base">Key Requirements:</h4>
+                  <ul className="text-xs sm:text-sm text-gray-600 space-y-1">
                     {job.requirements.slice(0, 3).map((req, index) => (
                       <li key={index} className="flex items-start">
                         <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 mr-2 flex-shrink-0"></span>
@@ -218,13 +218,13 @@ const JobBoard: React.FC<JobBoardProps> = ({ onAuthRequired, onBack }) => {
                 </div>
               )}
 
-              <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                <span className="text-xs text-gray-500">
-                  Posted {formatDate(job.createdDate)}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-4 border-t border-gray-200 space-y-3 sm:space-y-0">
+                <span className="text-xs text-gray-500 order-2 sm:order-1">
+                  <span className="hidden sm:inline">Posted </span>{formatDate(job.createdDate)}
                 </span>
                 <button
                   onClick={() => handleApplyClick(job)}
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                  className="bg-blue-600 text-white px-4 sm:px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm sm:text-base order-1 sm:order-2"
                 >
                   Apply Now
                 </button>

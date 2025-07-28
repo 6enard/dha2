@@ -32,15 +32,15 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-900 text-white w-64 min-h-screen flex flex-col">
+    <div className="bg-gray-900 text-white w-16 lg:w-64 min-h-screen flex flex-col">
       <div className="p-6">
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 lg:space-x-3">
           <img 
             src="/DHALOGO.png" 
             alt="Digital Health Agency" 
             className="w-10 h-10 rounded-lg object-contain"
           />
-          <div>
+          <div className="hidden lg:block">
             <h1 className="text-xl font-bold">DHA</h1>
             <p className="text-sm text-gray-400">HR Management</p>
           </div>
@@ -53,16 +53,17 @@ const Sidebar: React.FC = () => {
             <li key={item.name}>
               <NavLink
                 to={item.href}
+                title={item.name}
                 className={({ isActive }) =>
-                  `flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                  `flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 group ${
                     isActive
                       ? 'bg-blue-600 text-white'
                       : 'text-gray-300 hover:bg-gray-800 hover:text-white'
                   }`
                 }
               >
-                <item.icon className="w-5 h-5 mr-3" />
-                {item.name}
+                <item.icon className="w-5 h-5 lg:mr-3" />
+                <span className="hidden lg:block">{item.name}</span>
               </NavLink>
             </li>
           ))}
@@ -72,10 +73,11 @@ const Sidebar: React.FC = () => {
       <div className="p-4 border-t border-gray-700">
         <button
           onClick={handleLogout}
-          className="flex items-center w-full px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors duration-200"
+          className="flex items-center w-full px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors duration-200 group"
+          title="Sign Out"
         >
-          <LogOut className="w-5 h-5 mr-3" />
-          Sign Out
+          <LogOut className="w-5 h-5 lg:mr-3" />
+          <span className="hidden lg:block">Sign Out</span>
         </button>
       </div>
     </div>

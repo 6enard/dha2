@@ -101,22 +101,23 @@ const Jobs: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Job Postings</h1>
-          <p className="text-gray-600 mt-1">Manage and create job opportunities</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Job Postings</h1>
+          <p className="text-gray-600 mt-1 text-sm sm:text-base">Manage and create job opportunities</p>
         </div>
         <button 
           onClick={() => setShowJobForm(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center space-x-2"
+          className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center space-x-2 text-sm sm:text-base"
         >
           <Plus className="w-4 h-4" />
-          <span>New Job</span>
+          <span className="hidden sm:inline">New Job</span>
+          <span className="sm:hidden">New</span>
         </button>
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -131,18 +132,19 @@ const Jobs: React.FC = () => {
           
           <div className="flex items-center space-x-2">
             <Filter className="w-5 h-5 text-gray-400" />
-            <div className="flex space-x-1">
+            <div className="flex flex-wrap gap-1">
               {filters.map((filter) => (
                 <button
                   key={filter.id}
                   onClick={() => setSelectedFilter(filter.id)}
-                  className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  className={`px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors ${
                     selectedFilter === filter.id
                       ? 'bg-blue-600 text-white'
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
                 >
-                  {filter.label} ({filter.count})
+                  <span className="hidden sm:inline">{filter.label} ({filter.count})</span>
+                  <span className="sm:hidden">{filter.label.split(' ')[0]} ({filter.count})</span>
                 </button>
               ))}
             </div>
@@ -153,11 +155,11 @@ const Jobs: React.FC = () => {
       {/* Jobs Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {filteredJobs.map((job) => (
-          <div key={job.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+          <div key={job.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 hover:shadow-md transition-shadow">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">{job.title}</h3>
-                <p className="text-gray-600 text-sm">{job.department}</p>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1">{job.title}</h3>
+                <p className="text-gray-600 text-xs sm:text-sm">{job.department}</p>
               </div>
               <span className={getStatusBadge(job.status)}>
                 {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
@@ -165,29 +167,32 @@ const Jobs: React.FC = () => {
             </div>
 
             <div className="space-y-2 mb-4">
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-xs sm:text-sm text-gray-600">
                 <MapPin className="w-4 h-4 mr-2" />
                 {job.location}
               </div>
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-xs sm:text-sm text-gray-600">
                 {getJobTypeIcon(job.type)}
                 <span className="ml-2 capitalize">{job.type.replace('-', ' ')}</span>
               </div>
               {job.salaryRange && (
-                <div className="flex items-center text-sm text-gray-600">
+                <div className="flex items-center text-xs sm:text-sm text-gray-600">
                   <DollarSign className="w-4 h-4 mr-2" />
                   {job.salaryRange}
                 </div>
               )}
             </div>
 
-            <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+            <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-3">
               {job.description}
             </p>
 
             <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-gray-500 hidden sm:block">
                 Posted {formatDate(job.createdDate)}
+              </span>
+              <span className="text-xs text-gray-500 sm:hidden">
+                {formatDate(job.createdDate)}
               </span>
               <div className="flex items-center space-x-2">
                 <button className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
@@ -216,11 +221,11 @@ const Jobs: React.FC = () => {
           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Plus className="w-8 h-8 text-gray-400" />
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
-          <p className="text-gray-600 mb-4">Get started by creating your first job posting.</p>
+          <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
+          <p className="text-sm sm:text-base text-gray-600 mb-4">Get started by creating your first job posting.</p>
           <button 
             onClick={() => setShowJobForm(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+            className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm sm:text-base"
           >
             Create Job
           </button>
