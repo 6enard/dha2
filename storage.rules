@@ -2,7 +2,7 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
     // Allow anyone to upload documents
-    match /documents/{type}/{userId}/{allPaths=**} {
+    match /applications/{userId}/{type}/{allPaths=**} {
       allow read, write: if true;
     }
     

@@ -289,9 +289,10 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onBack, onBrows
                         {selectedApplication.documents.resume.url && (
                           <button
                             onClick={() => window.open(selectedApplication.documents!.resume!.url, '_blank')}
-                            className="text-blue-600 hover:text-blue-700 text-xs"
+                            className="text-blue-600 hover:text-blue-700 text-xs flex items-center space-x-1"
                           >
-                            View
+                            <Eye className="w-3 h-3" />
+                            <span>View</span>
                           </button>
                         )}
                       </div>
@@ -315,9 +316,10 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onBack, onBrows
                         {selectedApplication.documents.coverLetter.url && (
                           <button
                             onClick={() => window.open(selectedApplication.documents!.coverLetter!.url, '_blank')}
-                            className="text-blue-600 hover:text-blue-700 text-xs"
+                            className="text-blue-600 hover:text-blue-700 text-xs flex items-center space-x-1"
                           >
-                            View
+                            <Eye className="w-3 h-3" />
+                            <span>View</span>
                           </button>
                         )}
                       </div>
@@ -341,9 +343,10 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onBack, onBrows
                         {selectedApplication.documents.portfolio.url && (
                           <button
                             onClick={() => window.open(selectedApplication.documents!.portfolio!.url, '_blank')}
-                            className="text-blue-600 hover:text-blue-700 text-xs"
+                            className="text-blue-600 hover:text-blue-700 text-xs flex items-center space-x-1"
                           >
-                            View
+                            <Eye className="w-3 h-3" />
+                            <span>View</span>
                           </button>
                         )}
                       </div>

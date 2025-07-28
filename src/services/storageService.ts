@@ -7,7 +7,7 @@ export const storageService = {
     try {
       const timestamp = Date.now();
       const fileName = `${timestamp}_${file.name}`;
-      const storageRef = ref(storage, `documents/${type}/${userId}/${fileName}`);
+      const storageRef = ref(storage, `applications/${userId}/${type}/${fileName}`);
       
       const snapshot = await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(snapshot.ref);

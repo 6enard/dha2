@@ -77,14 +77,8 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
   };
 
   const handleDocumentDownload = (documentUrl: string, documentName: string) => {
-    // Create a temporary link to download the file
-    const link = document.createElement('a');
-    link.href = documentUrl;
-    link.download = documentName;
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // This function is no longer needed as we're using direct anchor links
+    window.open(documentUrl, '_blank');
   };
 
   return (
@@ -216,13 +210,16 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                               >
                                 <Eye className="w-4 h-4" />
                               </button>
-                              <button
-                                onClick={() => handleDocumentDownload(application.documents.resume!.url!, application.documents.resume!.name)}
+                              <a
+                                href={application.documents.resume.url}
+                                download={application.documents.resume.name}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                                 title="Download Document"
                               >
                                 <Download className="w-4 h-4" />
-                              </button>
+                              </a>
                             </>
                           ) : (
                             <span className="text-xs text-gray-600 px-2 py-1 bg-gray-100 rounded">
@@ -264,13 +261,16 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                               >
                                 <Eye className="w-4 h-4" />
                               </button>
-                              <button
-                                onClick={() => handleDocumentDownload(application.documents.coverLetter!.url!, application.documents.coverLetter!.name)}
+                              <a
+                                href={application.documents.coverLetter.url}
+                                download={application.documents.coverLetter.name}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                                 title="Download Document"
                               >
                                 <Download className="w-4 h-4" />
-                              </button>
+                              </a>
                             </>
                           ) : (
                             <span className="text-xs text-gray-600 px-2 py-1 bg-gray-100 rounded">
@@ -312,13 +312,16 @@ const ApplicationDetailsModal: React.FC<ApplicationDetailsModalProps> = ({
                               >
                                 <Eye className="w-4 h-4" />
                               </button>
-                              <button
-                                onClick={() => handleDocumentDownload(application.documents.portfolio!.url!, application.documents.portfolio!.name)}
+                              <a
+                                href={application.documents.portfolio.url}
+                                download={application.documents.portfolio.name}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                                 title="Download Document"
                               >
                                 <Download className="w-4 h-4" />
-                              </button>
+                              </a>
                             </>
                           ) : (
                             <span className="text-xs text-gray-600 px-2 py-1 bg-gray-100 rounded">
