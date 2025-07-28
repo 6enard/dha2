@@ -56,9 +56,9 @@ const Sidebar: React.FC = () => {
       {/* Sidebar */}
       <div className={`
         bg-gray-900 text-white min-h-screen flex flex-col
-        fixed lg:relative inset-y-0 left-0 z-50
+        fixed lg:static inset-y-0 left-0 z-50
         transform transition-transform duration-300 ease-in-out
-        w-64 lg:w-16 lg:hover:w-64 lg:transition-all lg:duration-300
+        w-64 lg:w-64
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         {/* Header */}
@@ -67,9 +67,9 @@ const Sidebar: React.FC = () => {
             <img 
               src="/DHALOGO.png" 
               alt="Digital Health Agency" 
-              className="w-10 h-10 rounded-lg object-contain"
+              className="w-8 h-8 rounded-lg object-contain"
             />
-            <div className="lg:opacity-0 lg:group-hover:opacity-100 lg:transition-opacity">
+            <div>
               <h1 className="text-xl font-bold">DHA</h1>
               <p className="text-sm text-gray-400">HR Management</p>
             </div>
@@ -92,9 +92,8 @@ const Sidebar: React.FC = () => {
                 <NavLink
                   to={item.href}
                   onClick={closeMobileMenu}
-                  title={item.name}
                   className={({ isActive }) =>
-                    `flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 group ${
+                    `flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 ${
                       isActive
                         ? 'bg-blue-600 text-white'
                         : 'text-gray-300 hover:bg-gray-800 hover:text-white'
@@ -102,7 +101,7 @@ const Sidebar: React.FC = () => {
                   }
                 >
                   <item.icon className="w-5 h-5 flex-shrink-0" />
-                  <span className="ml-3 lg:opacity-0 lg:group-hover:opacity-100 lg:transition-opacity">
+                  <span className="ml-3">
                     {item.name}
                   </span>
                 </NavLink>
@@ -118,11 +117,10 @@ const Sidebar: React.FC = () => {
               handleLogout();
               closeMobileMenu();
             }}
-            className="flex items-center w-full px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors duration-200 group"
-            title="Sign Out"
+            className="flex items-center w-full px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors duration-200"
           >
             <LogOut className="w-5 h-5 flex-shrink-0" />
-            <span className="ml-3 lg:opacity-0 lg:group-hover:opacity-100 lg:transition-opacity">
+            <span className="ml-3">
               Sign Out
             </span>
           </button>
