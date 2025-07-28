@@ -267,6 +267,91 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onBack, onBrows
                 </div>
               )}
 
+              {selectedApplication.documents && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Documents</label>
+                  <div className="space-y-2">
+                    {selectedApplication.documents?.resume && (
+                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <FileText className="w-4 h-4 text-blue-500" />
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">Resume</p>
+                            <p className="text-xs text-gray-600">{selectedApplication.documents.resume.name}</p>
+                            <p className="text-xs text-gray-500">
+                              Status: {selectedApplication.documents.resume.status === 'uploaded' ? 
+                                <span className="text-green-600">Successfully uploaded</span> : 
+                                <span className="text-red-600">Upload failed</span>
+                              }
+                            </p>
+                          </div>
+                        </div>
+                        {selectedApplication.documents.resume.url && (
+                          <button
+                            onClick={() => window.open(selectedApplication.documents!.resume!.url, '_blank')}
+                            className="text-blue-600 hover:text-blue-700 text-xs"
+                          >
+                            View
+                          </button>
+                        )}
+                      </div>
+                    )}
+                    
+                    {selectedApplication.documents?.coverLetter && (
+                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <FileText className="w-4 h-4 text-green-500" />
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">Cover Letter</p>
+                            <p className="text-xs text-gray-600">{selectedApplication.documents.coverLetter.name}</p>
+                            <p className="text-xs text-gray-500">
+                              Status: {selectedApplication.documents.coverLetter.status === 'uploaded' ? 
+                                <span className="text-green-600">Successfully uploaded</span> : 
+                                <span className="text-red-600">Upload failed</span>
+                              }
+                            </p>
+                          </div>
+                        </div>
+                        {selectedApplication.documents.coverLetter.url && (
+                          <button
+                            onClick={() => window.open(selectedApplication.documents!.coverLetter!.url, '_blank')}
+                            className="text-blue-600 hover:text-blue-700 text-xs"
+                          >
+                            View
+                          </button>
+                        )}
+                      </div>
+                    )}
+                    
+                    {selectedApplication.documents?.portfolio && (
+                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <FileText className="w-4 h-4 text-purple-500" />
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">Portfolio</p>
+                            <p className="text-xs text-gray-600">{selectedApplication.documents.portfolio.name}</p>
+                            <p className="text-xs text-gray-500">
+                              Status: {selectedApplication.documents.portfolio.status === 'uploaded' ? 
+                                <span className="text-green-600">Successfully uploaded</span> : 
+                                <span className="text-red-600">Upload failed</span>
+                              }
+                            </p>
+                          </div>
+                        </div>
+                        {selectedApplication.documents.portfolio.url && (
+                          <button
+                            onClick={() => window.open(selectedApplication.documents!.portfolio!.url, '_blank')}
+                            className="text-blue-600 hover:text-blue-700 text-xs"
+                          >
+                            View
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h4 className="font-medium text-blue-900 mb-2">Status Information</h4>
                 <p className="text-sm text-blue-800">{getStatusMessage(selectedApplication.status)}</p>
