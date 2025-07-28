@@ -40,12 +40,19 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
     setError('');
 
     try {
+      // Validate required fields
+      if (!uploadedFiles.resume) {
+        throw new Error('Please upload your resume before submitting.');
+      }
+
       // Upload documents to Firebase Storage
       const documents: any = {};
       
       if (uploadedFiles.resume) {
         try {
+          console.log('Uploading resume...');
           const resumeUrl = await storageService.uploadDocument(uploadedFiles.resume, 'resume', currentUser!.uid);
+          console.log('Resume uploaded successfully:', resumeUrl);
           documents.resume = {
             name: uploadedFiles.resume.name,
             url: resumeUrl,
@@ -56,19 +63,15 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
           };
         } catch (error) {
           console.error('Error uploading resume:', error);
-          documents.resume = {
-            name: uploadedFiles.resume.name,
-            size: uploadedFiles.resume.size,
-            type: uploadedFiles.resume.type,
-            uploadedAt: new Date(),
-            status: 'failed'
-          };
+          throw new Error(`Failed to upload resume: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
       }
 
       if (uploadedFiles.coverLetter) {
         try {
+          console.log('Uploading cover letter...');
           const coverLetterUrl = await storageService.uploadDocument(uploadedFiles.coverLetter, 'coverLetter', currentUser!.uid);
+          console.log('Cover letter uploaded successfully:', coverLetterUrl);
           documents.coverLetter = {
             name: uploadedFiles.coverLetter.name,
             url: coverLetterUrl,
@@ -79,19 +82,16 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
           };
         } catch (error) {
           console.error('Error uploading cover letter:', error);
-          documents.coverLetter = {
-            name: uploadedFiles.coverLetter.name,
-            size: uploadedFiles.coverLetter.size,
-            type: uploadedFiles.coverLetter.type,
-            uploadedAt: new Date(),
-            status: 'failed'
-          };
+          // Cover letter is optional, so we can continue without it
+          console.warn('Cover letter upload failed, continuing without it');
         }
       }
 
       if (uploadedFiles.portfolio) {
         try {
+          console.log('Uploading portfolio...');
           const portfolioUrl = await storageService.uploadDocument(uploadedFiles.portfolio, 'portfolio', currentUser!.uid);
+          console.log('Portfolio uploaded successfully:', portfolioUrl);
           documents.portfolio = {
             name: uploadedFiles.portfolio.name,
             url: portfolioUrl,
@@ -102,16 +102,12 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
           };
         } catch (error) {
           console.error('Error uploading portfolio:', error);
-          documents.portfolio = {
-            name: uploadedFiles.portfolio.name,
-            size: uploadedFiles.portfolio.size,
-            type: uploadedFiles.portfolio.type,
-            uploadedAt: new Date(),
-            status: 'failed'
-          };
+          // Portfolio is optional, so we can continue without it
+          console.warn('Portfolio upload failed, continuing without it');
         }
       }
 
+      console.log('Creating application with documents:', documents);
       const applicationData = {
         ...formData,
         position: job.title,
@@ -122,9 +118,11 @@ const PublicApplicationForm: React.FC<PublicApplicationFormProps> = ({ job, onCl
       };
 
       await applicationService.createApplication(applicationData);
+      console.log('Application created successfully');
       setIsSubmitted(true);
     } catch (err) {
-      setError(`Failed to submit application: ${err instanceof Error ? err.message : 'Please try again.'}`);
+      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred. Please try again.';
+      setError(errorMessage);
       console.error('Error submitting application:', err);
     } finally {
       setIsSubmitting(false);
