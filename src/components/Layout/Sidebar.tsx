@@ -65,7 +65,7 @@ const Sidebar: React.FC = () => {
         <div className="p-6 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <img 
-              src="/DHALOGO.png" 
+              src="/dhanewlogo.jpeg" 
               alt="Digital Health Agency" 
               className="w-8 h-8 rounded-lg object-contain"
             />

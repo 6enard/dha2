@@ -29,7 +29,7 @@ const Login: React.FC = () => {
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
         <div className="text-center mb-8">
           <img 
-            src="/DHALOGO.png" 
+            src="/dhanewlogo.jpeg" 
             alt="Digital Health Agency" 
             className="w-16 h-16 rounded-xl mx-auto mb-4 object-contain"
           />
